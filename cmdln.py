@@ -1,7 +1,7 @@
 #!/usr/bin/env python
-# Copyright (c) 2002-2007 ActiveState Corp.
+# Copyright (c) 2002-2007 ActiveState Software Inc.
 # License: MIT (see LICENSE.txt for license details)
-# Author:  Trent Mick (TrentM@ActiveState.com)
+# Author:  Trent Mick
 # Home:    http://trentm.com/projects/cmdln/
 
 """An improvement on Python's standard cmd.py module.
