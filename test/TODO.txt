@@ -1,0 +1,1 @@
+- testlib doesn't pick up on test_doctests.py

@@ -1,0 +1,73 @@
+### Detailed Differences with `cmd.py`
+
+This section is probably only interesting to those quite familiar with
+the standard [cmd](http://docs.python.org/lib/module-cmd.html). If you
+are relative new to `cmd` as well, then you can safely ignore it and
+probably learn this module best by reading the "`cmdln.py` By Example"
+section above.
+
+- Instead of passing a command *line* to subcommand handlers, an argv
+  *list* is given to subcommands of `RawCmdln` instances. This makes
+  for more natural use of option processing in the `do_*` subcommand
+  handler methods with `getopt`, `optparse`, etc.  The `Cmdln` class
+  take this further by automatically parsing options for sub-commands
+  declared with decorators on the command handler.
+- By default the help for a subcommand is the associated method's
+  docstring.  Default help output is also much nicer.
+
+  - `helpdefault()` (in the spirit of the already existing `default()`
+    and `completedefault()`) extends what was previously just the
+    `nohelp` attribute. The `unknowncmd` error string was added and
+    `nohelp` is still used so that the two situations are
+    differentiated.  This allows for better default help control.
+  - Change the default output for "help ..." command errors. It depends
+    on if in a command loop.
+- The default command (when an empty line is entered) is to do
+  *nothing*, rather than `cmd.py`'s default, which is to repeat the
+  last command.
+- Some of `Cmdln`'s hook methods have slightly different APIs than
+  `Cmd`:
+
+        cmd.Cmd:
+            onecmd(argv) -> stop
+            postcmd(stop, argv) -> stop
+            default(argv) -> stop
+
+        cmdln.Cmdln:
+            onecmd(argv) -> retval  # can set self.stop to True to break loop
+            postcmd(argv)           # can reset self.stop to False
+            default(argv) -> retval
+
+  The concept of when to stop the command loop has been pulled out of
+  the `onecmd` and `postcmd` signatures in favour of a `retval` value.
+  This is a real retval that can be returned for one-shot commands
+  (i.e. use of a `Cmdln` instance without using the `cmdloop`).
+
+  The `stop` functionality is still provided via the `self.stop` class
+  attribute. A `do_*` command implementation may set this to true to
+  break the command loop; and `postcmd` may override that by resetting
+  `self.stop` to false.
+
+  TODO: check that this point is still accurate.
+
+- There is a default EOF handler to exit the command loop. This
+  eliminates the possible infinite loop with a given EOF in uses of
+  `cmd.Cmd`.
+- New `.cmd()` method to just run one command and exit (a brother to
+  `.cmdloop()`). TODO: still true?
+- New `.main()` method that is a useful default mainline handler for
+  scripts.
+- Safer unicode handling of output (help content,
+  `intro/unknowncmd/nohelp` attributes, etc.)
+- TODO: hidden commands when prefixed with '_do_'
+- TODO: Describe the added error handling.
+- TODO: don't allow the '!' shell out
+- TODO: helpprocess() and default "`<COMMAND-LIST>`" key
+- TODO: default bare `help` command handler
+- TODO: change `help_*()` API to *return* help string instead of
+  printing.  Means can better handle unicode issues, ensure content is
+  written to self.stdout, and can implement the default bare `help`
+  handler.
+- TODO: aliases (with and without decorator usage)
+- TODO: optparse option processing
+

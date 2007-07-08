@@ -1,0 +1,79 @@
+High Priority
+=============
+
+- new top-level option handling:
+    - hint at other features in getting started
+    - write a reference doc:
+        - pilfer from docs/diffs_with_cmd.txt and probably drop that doc
+    - release
+    - update thirtyboxes.py to use this new option handler
+    - clear out the other issues here 
+    - test suite
+
+
+
+Prioritize These
+================
+
+- TODO: possible quick hack to have ${command_list} display sub commands in
+  the order in which they are defined? Also provide a sort_command_list()
+  hook (or some name like that).
+- improve 'django-admin.py' script
+- TODO: Implement cmdtest -> doctest for script running at the shell
+  Maybe punt on Windows (at least for the interactive bits). I *think* I have
+  it basically going, but it is dog-slow on Windows.
+    - can it be done without expect?
+- TODO: Add an option to special case '?' and '!' (perhaps just while
+  cmdlooping) to allow "!ls" or "?subcommand". I.e. no space required.
+- TODO: document self.cmdqueue (for one it is now a queue of argv's rather
+  than a queue of lines). It is used in some code I've seen out there to
+  preload the Cmd instance with some commands.
+- TODO: document Cmdln.helpindent
+- TODO: document how to add --version option to top-level (via .version
+  attrib)
+- RFE: configurable options:
+    - saved readline history (with a given config file -- reasonable default)
+      and using readline.{read|write}_history(line)
+- RFE: Can the complete stuff be made to work with standard option handling.
+  How about automatically generating Bash (or other shell) completion code
+  (see the svn stuff) from class definitions.
+- RFE: Does it make sense to borrow line2argv/argv2line from anywhere, e.g.
+  subprocess module?
+- RFE: do I want to propose this for Python core? As an extension to cmd.py?
+- RFE: Handling completion with 'editline' and get 'readline' to work (it
+  doesn't right now -- on my home OS X box, at least)
+
+
+Medium Priority
+===============
+
+- Fix option formatting to NOT reflow option help. See how --revision
+  argument help is being screwed up in svn.py: "examples/svn.py help up".
+
+
+Low Priority
+============
+
+- RFE: format option output like 'svn'
+- RFE: format option output like my 'grep' on Windows (i.e. aligning short
+  and long options):
+        ...
+        Miscellaneous:
+          -s, --no-messages         suppress error messages
+          -v, --invert-match        select non-matching lines
+          -V, --version             print version information and exit
+              --help                display this help and exit
+              --mmap                use memory-mapped input if possible
+
+        Output control:
+          -m, --max-count=NUM       stop after NUM matches
+          -b, --byte-offset         print the byte offset with output lines
+          -n, --line-number         print line number with output lines
+        ...
+
+- RFE: Add dispatcher to recognize partial command names without ambiguity.
+  Do this as a subclass to (1) show how to do it and (2) to be useful.
+- RFE: an OptionParser option handler for std command-line way to control
+  logging streams
+
+
