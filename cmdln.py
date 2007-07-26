@@ -36,7 +36,7 @@ details.
 """
 
 __revision__ = "$Id$"
-__version_info__ = (1, 0, 0)
+__version_info__ = (1, 0, 1)
 __version__ = '.'.join(map(str, __version_info__))
 
 import os
@@ -660,6 +660,18 @@ class RawCmdln(cmd.Cmd):
             help = help.replace(indent+marker+suffix, block, 1)
         return help
 
+    def _gen_names_and_attrs(self):
+        # Inheritance says we have to look in class and
+        # base classes; order is not important.
+        names = []
+        classes = [self.__class__]
+        while classes:
+            aclass = classes.pop(0)
+            if aclass.__bases__:
+                classes = classes + list(aclass.__bases__)
+            for name in dir(aclass):
+                yield (name, getattr(aclass, name))
+
     def _help_preprocess_help_list(self, help, cmdname=None):
         marker = "${help_list}"
         indent, indent_width = _get_indent(marker, help)
@@ -668,21 +680,22 @@ class RawCmdln(cmd.Cmd):
         # Determine the additional help topics, if any.
         helpnames = {}
         token2cmdname = self._get_canonical_map()
-        for attr in self.get_names():
-            if not attr.startswith("help_"): continue
-            helpname = attr[5:]
+        for attrname, attr in self._gen_names_and_attrs():
+            if not attrname.startswith("help_"): continue
+            helpname = attrname[5:]
             if helpname not in token2cmdname:
-                helpnames[helpname] = True
+                helpnames[helpname] = attr
 
         if helpnames:
-            helpnames = helpnames.keys()
-            helpnames.sort()
-            linedata = [(self.name+" help "+n, "") for n in helpnames]
+            linedata = [(n, a.__doc__ or "") for n, a in helpnames.items()]
+            linedata.sort()
 
             subindent = indent + ' '*4
             lines = _format_linedata(linedata, subindent, indent_width+4)
-            block = indent + "Additional help topics:\n" \
-                    + '\n'.join(lines) + "\n\n"
+            block = (indent
+                    + "Additional help topics (run `%s help TOPIC'):\n" % self.name
+                    + '\n'.join(lines)
+                    + "\n\n")
         else:
             block = ''
         help = help.replace(indent+marker+suffix, block, 1)
@@ -1117,10 +1130,15 @@ def _format_linedata(linedata, indent, indent_width):
     """
     lines = []
     WIDTH = 78 - indent_width
-    SPACING = 3
-    MAX_NAME_WIDTH = 15
+    SPACING = 2
+    NAME_WIDTH_LOWER_BOUND = 13
+    NAME_WIDTH_UPPER_BOUND = 16
+    NAME_WIDTH = max([len(s) for s,d in linedata])
+    if NAME_WIDTH < NAME_WIDTH_LOWER_BOUND:
+        NAME_WIDTH = NAME_WIDTH_LOWER_BOUND
+    else:
+        NAME_WIDTH = NAME_WIDTH_UPPER_BOUND
 
-    NAME_WIDTH = min(max([len(s) for s,d in linedata]), MAX_NAME_WIDTH)
     DOC_WIDTH = WIDTH - NAME_WIDTH - SPACING
     for namestr, doc in linedata:
         line = indent + namestr
