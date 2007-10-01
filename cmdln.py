@@ -40,6 +40,7 @@ __version_info__ = (1, 0, 1)
 __version__ = '.'.join(map(str, __version_info__))
 
 import os
+import sys
 import re
 import cmd
 import optparse
@@ -1220,14 +1221,7 @@ def line2argv(line):
     ['foo bar', 'spam']
     >>> line2argv("'foo 'bar spam")
     ['foo bar', 'spam']
-    >>> line2argv("'foo")
-    Traceback (most recent call last):
-        ...
-    ValueError: command line is not terminated: unfinished single-quoted segment
-    >>> line2argv('"foo')
-    Traceback (most recent call last):
-        ...
-    ValueError: command line is not terminated: unfinished double-quoted segment
+    
     >>> line2argv('some\tsimple\ttests')
     ['some', 'simple', 'tests']
     >>> line2argv('a "more complex" test')
@@ -1238,6 +1232,30 @@ def line2argv(line):
     ['a', 'more complex test of ', 'quotes']
     >>> line2argv('an "embedded \\"quote\\""')
     ['an', 'embedded "quote"']
+
+    # Komodo bug 48027
+    >>> line2argv('foo bar C:\\')
+    ['foo', 'bar', 'C:\\']
+
+    # Komodo change 127581
+    >>> line2argv(r'"\test\slash" "foo bar" "foo\"bar"')
+    ['\\test\\slash', 'foo bar', 'foo"bar']
+
+    # Komodo change 127629
+    >>> if sys.platform == "win32":
+    ...     line2argv(r'\foo\bar') == ['\\foo\\bar']
+    ...     line2argv(r'\\foo\\bar') == ['\\\\foo\\\\bar']
+    ...     line2argv('"foo') == ['foo']
+    ... else:
+    ...     line2argv(r'\foo\bar') == ['foobar']
+    ...     line2argv(r'\\foo\\bar') == ['\\foo\\bar']
+    ...     try:
+    ...         line2argv('"foo')
+    ...     except ValueError, ex:
+    ...         "not terminated" in str(ex)
+    True
+    True
+    True
     """
     import string
     line = line.strip()
@@ -1250,8 +1268,13 @@ def line2argv(line):
         if i >= len(line): break
         ch = line[i]
 
-        if ch == "\\": # escaped char always added to arg, regardless of state
+        if ch == "\\" and i+1 < len(line):
+            # escaped char always added to arg, regardless of state
             if arg is None: arg = ""
+            if (sys.platform == "win32"
+                or state in ("double-quoted", "single-quoted")
+               ) and line[i+1] not in tuple('"\''):
+                arg += ch
             i += 1
             arg += line[i]
             continue
@@ -1282,7 +1305,7 @@ def line2argv(line):
                 arg += ch
     if arg is not None:
         argv.append(arg)
-    if state != "default":
+    if not sys.platform == "win32" and state != "default":
         raise ValueError("command line is not terminated: unfinished %s "
                          "segment" % state)
     return argv
