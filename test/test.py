@@ -21,6 +21,7 @@ def setup():
     else:
         os.environ["PYTHONPATH"] = cmdln_src_dir
 
+#TODO: hook test_doctests.py into this
 if __name__ == "__main__":
     retval = testlib.harness(setup_func=setup)
     sys.exit(retval)
