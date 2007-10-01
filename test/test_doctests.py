@@ -5,12 +5,14 @@
 """Run doctests in various files in this project."""
 
 import sys
+from os.path import dirname, abspath
 import unittest
 import doctest
 
 def suite():
     """Return a unittest.TestSuite to be used by test.py."""
     suite = unittest.TestSuite()
+    sys.path.insert(0, dirname(dirname(abspath(__file__))))
     import cmdln
     suite.addTest(doctest.DocTestSuite(cmdln))
     return suite
