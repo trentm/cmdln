@@ -36,7 +36,7 @@ details.
 """
 
 __revision__ = "$Id$"
-__version_info__ = (1, 0, 1)
+__version_info__ = (1, 1, 0)
 __version__ = '.'.join(map(str, __version_info__))
 
 import os
@@ -45,6 +45,7 @@ import re
 import cmd
 import optparse
 from pprint import pprint
+import sys
 
 
 
@@ -1468,4 +1469,103 @@ def _get_trailing_whitespace(marker, s):
             break
         i += 1
     return suffix
+
+
+
+#---- bash completion support
+# Note: This is still experimental. I expect to change this
+# significantly.
+#
+# To get Bash completion for a cmdln.Cmdln class, run the following
+# bash command:
+#   $ complete -C 'python -m cmdln /path/to/script.py CmdlnClass' cmdname
+# For example:
+#   $ complete -C 'python -m cmdln ~/bin/svn.py SVN' svn
+#
+#TODO: Simplify the above so don't have to given path to script (try to
+#      find it on PATH, if possible). Could also make class name
+#      optional if there is only one in the module (common case).
+
+if __name__ == "__main__" and len(sys.argv) == 6:
+    def _log(s):
+        return # no-op, comment out for debugging
+        from os.path import expanduser
+        fout = open(expanduser("~/tmp/bashcpln.log"), 'a')
+        fout.write(str(s) + '\n')
+        fout.close()
+
+    # Recipe: module_from_path (1.0.1+)
+    def _module_from_path(path):
+        import imp, os, sys
+        path = os.path.expanduser(path)
+        dir = os.path.dirname(path) or os.curdir
+        name = os.path.splitext(os.path.basename(path))[0]
+        sys.path.insert(0, dir)
+        try:
+            iinfo = imp.find_module(name, [dir])
+            return imp.load_module(name, *iinfo)
+        finally:
+            sys.path.remove(dir)
+
+    def _get_bash_cplns(script_path, class_name, cmd_name,
+                        token, preceding_token):
+        _log('--')
+        _log('get_cplns(%r, %r, %r, %r, %r)'
+             % (script_path, class_name, cmd_name, token, preceding_token))
+        comp_line = os.environ["COMP_LINE"]
+        comp_point = int(os.environ["COMP_POINT"])
+        _log("COMP_LINE: %r" % comp_line)
+        _log("COMP_POINT: %r" % comp_point)
+
+        try:
+            script = _module_from_path(script_path)
+        except ImportError, ex:
+            _log("error importing `%s': %s" % (script_path, ex))
+            return []
+        shell = getattr(script, class_name)()
+        cmd_map = shell._get_canonical_map()
+        del cmd_map["EOF"]
+
+        # Determine if completing the sub-command name.
+        parts = comp_line[:comp_point].split(None, 1)
+        _log(parts)
+        if len(parts) == 1 or not (' ' in parts[1] or '\t' in parts[1]):
+            #TODO: if parts[1].startswith('-'): handle top-level opts
+            _log("complete sub-command names")
+            matches = {}
+            for name, canon_name in cmd_map.items():
+                if name.startswith(token):
+                    matches[name] = canon_name
+            if not matches:
+                return []
+            elif len(matches) == 1:
+                return matches.keys()
+            elif len(set(matches.values())) == 1:
+                return [matches.values()[0]]
+            else:
+                return matches.keys()
+
+        # Otherwise, complete options for the given sub-command.
+        #TODO: refine this so it does the right thing with option args
+        if token.startswith('-'):
+            cmd_name = comp_line.split(None, 2)[1]
+            try:
+                cmd_canon_name = cmd_map[cmd_name]
+            except KeyError:
+                return []
+            handler = shell._get_cmd_handler(cmd_canon_name)
+            optparser = getattr(handler, "optparser", None)
+            if optparser is None:
+                optparser = SubCmdOptionParser()
+            opt_strs = []
+            for option in optparser.option_list:
+                for opt_str in option._short_opts + option._long_opts:
+                    if opt_str.startswith(token):
+                        opt_strs.append(opt_str)
+            return opt_strs
+
+        return []
+
+    for cpln in _get_bash_cplns(*sys.argv[1:]):
+        print cpln
 
