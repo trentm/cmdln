@@ -14,7 +14,7 @@
 <div class="download-box">
 <strong>Download</strong>
 <ul>
-<li> <a href="http://trentm.com/downloads/cmdln/1.0.0/cmdln-1.0.0.zip">cmdln.py 1.0 source package</a> </li>
+<li> <a href="http://trentm.com/downloads/cmdln/1.1.1/cmdln-1.1.1.zip">cmdln.py 1.1.1 source package</a> </li>
 </ul> </div>
 
 <table class="attrlist">
@@ -34,7 +34,7 @@
 </tr>
 <tr>
     <th>Current Version</th>
-    <td>1.0</td>
+    <td>1.1.1</td>
 </tr>
 <tr>
     <th>Dev Status</th>
@@ -92,8 +92,8 @@ Install notes and intro docs are below. Please send any feedback to
 Download the latest `cmdln.py` source package, unzip it, and run
 `python setup.py install`:
 
-    unzip cmdln-1.0.0.zip
-    cd cmdln-1.0.0
+    unzip cmdln-1.1.1.zip
+    cd cmdln-1.1.1
     python setup.py install
 
 If your install fails then please visit [the Troubleshooting
@@ -156,9 +156,9 @@ here. (1) There is a reasonable default help string:
     $ python svn.py
     Usage:
         svn COMMAND [ARGS...]
-        svn help COMMAND
+        svn help [COMMAND]
 
-    commands:
+    Commands:
         help (?)            give detailed help on a specific command
         status (st, stat)   print the status of working copy files and dire...
 
@@ -196,6 +196,17 @@ Read the [Getting Started docs](docs/getting_started.html) next.
 
 <h2 id="changelog">Change Log</h2>
 
+
+### v1.1.1
+- Issue 1: fix readline-based completion and history (from Joshua
+  Gallagher).
+- Experimental automatic bash completion support. See r8 for details:
+    svn diff -r7:8 http://cmdln.googlecode.com/svn/trunk/cmdln.py
+- Some minor improvements to line2argv processing (r7).
+- Fix "${help_list}" layout problems and more closely follow optparse
+  option list help output (r4).
+- Moved project to Google Code (http://code.google.com/p/cmdln)
+  for Subversion there and for the issue tracker.
 
 ### v1.0.0
 - [backward incompat] `Cmdln.main()` no longer takes an `optparser`
