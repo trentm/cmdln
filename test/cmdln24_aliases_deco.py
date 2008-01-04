@@ -17,16 +17,16 @@
 
     $ python cmdln24_aliases_deco.py help
     Usage:
-        cmdln24_aliases_deco.py <command> [<args>...]
-        cmdln24_aliases_deco.py help <command>
-    <BLANKLINE>
+        cmdln24_aliases_deco.py COMMAND [ARGS...]
+        cmdln24_aliases_deco.py help [COMMAND]
+    <BLANKLINE>    
     Options:
         -h, --help  show this help message and exit
-    <BLANKLINE>
+    <BLANKLINE>    
     Commands:
-        bar (b, ba)   whopee!
-        foo (!, f)    shazam!
-        help (?)      give detailed help on a specific sub-command
+        bar (b, ba)    whopee!
+        foo (!, f)     shazam!
+        help (?)       give detailed help on a specific sub-command
 
 """
 

@@ -3,28 +3,36 @@
 r"""
     $ python cmdln_help_preprocess.py
     Usage:
-        svn <command> [<args>...]
-        svn help <command>
+        svn COMMAND [ARGS...]
+        svn help [COMMAND]
+    <BLANKLINE>    
+    Options:
+        -h, --help  show this help message and exit
     <BLANKLINE>
     Commands:
-        help (?)            give detailed help on a specific sub-command
-        status (st, stat)   Print the status of working copy files and director...
+        help (?)          give detailed help on a specific sub-command
+        status (st, stat) 
+                          Print the status of working copy files and directories.
     <BLANKLINE>
-    additional help topics:
-        svn help foo
+    Additional help topics (run `svn help TOPIC'):
+        foo
 
 
     $ python cmdln_help_preprocess.py help
     Usage:
-        svn <command> [<args>...]
-        svn help <command>
+        svn COMMAND [ARGS...]
+        svn help [COMMAND]
+    <BLANKLINE>    
+    Options:
+        -h, --help  show this help message and exit
     <BLANKLINE>
     Commands:
-        help (?)            give detailed help on a specific sub-command
-        status (st, stat)   Print the status of working copy files and director...
+        help (?)          give detailed help on a specific sub-command
+        status (st, stat) 
+                          Print the status of working copy files and directories.
     <BLANKLINE>
-    additional help topics:
-        svn help foo
+    Additional help topics (run `svn help TOPIC'):
+        foo
 
 
     $ python cmdln_help_preprocess.py help status
