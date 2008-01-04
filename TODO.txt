@@ -40,8 +40,7 @@ Prioritize These
 - RFE: Does it make sense to borrow line2argv/argv2line from anywhere, e.g.
   subprocess module?
 - RFE: do I want to propose this for Python core? As an extension to cmd.py?
-- RFE: Handling completion with 'editline' and get 'readline' to work (it
-  doesn't right now -- on my home OS X box, at least)
+- RFE: Handling completion with 'editline'
 
 
 Medium Priority
