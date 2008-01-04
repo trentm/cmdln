@@ -28,7 +28,7 @@ called "conan.py" and try it out. (Or you can download `the finished conan.py
     $ python conan.py
     Usage:
         conan.py COMMAND [ARGS...]
-        conan.py help COMMAND
+        conan.py help [COMMAND]
 
     Options:
         -h, --help  show this help message and exit
