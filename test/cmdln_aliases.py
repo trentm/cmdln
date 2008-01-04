@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-"""
+r"""
     $ python cmdln_aliases.py foo
     hello from foo
     $ python cmdln_aliases.py f
@@ -10,12 +10,15 @@
 
     $ python cmdln_aliases.py help
     Usage:
-        cmdln_aliases.py <command> [<args>...]
-        cmdln_aliases.py help <command>
+        cmdln_aliases.py COMMAND [ARGS...]
+        cmdln_aliases.py help [COMMAND]
+    <BLANKLINE>    
+    Options:
+        -h, --help  show this help message and exit
     <BLANKLINE>    
     Commands:
-        foo (!, f)   shazam!
-        help (?)     give detailed help on a specific sub-command
+        foo (!, f)     shazam!
+        help (?)       give detailed help on a specific sub-command
 
 """
 
