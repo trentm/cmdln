@@ -41,6 +41,8 @@ Prioritize These
   subprocess module?
 - RFE: do I want to propose this for Python core? As an extension to cmd.py?
 - RFE: Handling completion with 'editline'
+- svx RFE: have equiv of "px changes -d" for "svx log" or something
+
 
 
 Medium Priority
