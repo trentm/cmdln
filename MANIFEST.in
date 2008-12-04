@@ -1,4 +1,4 @@
-include *.py *.in *.txt logo.jpg
+include *.py *.in *.txt
 exclude *~
 recursive-include test *.txt *.py
 recursive-include examples *.py

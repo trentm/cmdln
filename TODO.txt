@@ -1,7 +1,8 @@
 High Priority
 =============
 
-- new top-level option handling:
+- finish re-structuring and Makefile.py usage, new version release
+- new top-level option handling (isn't most or all of this done?):
     - hint at other features in getting started
     - write a reference doc:
         - pilfer from docs/diffs_with_cmd.txt and probably drop that doc
