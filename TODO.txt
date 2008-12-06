@@ -1,7 +1,8 @@
 High Priority
 =============
 
-- finish re-structuring and Makefile.py usage, new version release
+- issue 3
+- announce a release on python-announce
 - new top-level option handling (isn't most or all of this done?):
     - hint at other features in getting started
     - write a reference doc:
