@@ -14,7 +14,7 @@
 <div class="download-box">
 <strong>Download</strong>
 <ul>
-<li> <a href="http://trentm.com/downloads/cmdln/1.1.1/cmdln-1.1.1.zip">cmdln.py 1.1.1 source package</a> </li>
+<li> <a href="http://cmdln.googlecode.com/files/cmdln-1.1.2.zip">cmdln.py 1.1.2 archive package</a> </li>
 </ul> </div>
 
 <table class="attrlist">
@@ -34,7 +34,7 @@
 </tr>
 <tr>
     <th>Current Version</th>
-    <td>1.1.1</td>
+    <td>1.1.2</td>
 </tr>
 <tr>
     <th>Dev Status</th>
@@ -92,8 +92,8 @@ Install notes and intro docs are below. Please send any feedback to
 Download the latest `cmdln.py` source package, unzip it, and run
 `python setup.py install`:
 
-    unzip cmdln-1.1.1.zip
-    cd cmdln-1.1.1
+    unzip cmdln-1.1.2.zip
+    cd cmdln-1.1.2
     python setup.py install
 
 If your install fails then please visit [the Troubleshooting
@@ -197,6 +197,9 @@ Read the [Getting Started docs](docs/getting_started.html) next.
 <h2 id="changelog">Change Log</h2>
 
 
+### v1.1.2
+- Some Python 2.6-ification. No functional change.
+
 ### v1.1.1
 - Issue 1: fix readline-based completion and history (from Joshua
   Gallagher).
@@ -207,6 +210,10 @@ Read the [Getting Started docs](docs/getting_started.html) next.
   option list help output (r4).
 - Moved project to Google Code (http://code.google.com/p/cmdln)
   for Subversion there and for the issue tracker.
+
+### v1.1.0
+- Experimental Bash completion integration. See "bash completion support"
+  section in cmdln.py for details.
 
 ### v1.0.0
 - [backward incompat] `Cmdln.main()` no longer takes an `optparser`

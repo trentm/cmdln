@@ -2,13 +2,13 @@ cmdln.py -- an improved cmd.py
 ==============================
 
 Download the latest cmdln.py packages from here:
-    (source) http://trentm.com/downloads/cmdln/1.1.1/cmdln-1.1.1.zip
+    (archive) http://cmdln.googlecode.com/files/cmdln-1.1.2.zip
 
 
 Home            : http://trentm.com/projects/cmdln/
 License         : MIT (see LICENSE.txt)
 Platforms       : Windows, Linux, Mac OS X, Unix
-Current Version : 1.1.1
+Current Version : 1.1.2
 Dev Status      : well tested; a similar design has been used in various
                   heavily used scripts at ActiveState for a while; some
                   features of this module *are* faily new though
@@ -56,8 +56,8 @@ Install Notes
 Download the latest `cmdln.py` source package, unzip it, and run
 `python setup.py install`:
 
-    unzip cmdln-1.1.1.zip
-    cd cmdln-1.1.1
+    unzip cmdln-1.1.2.zip
+    cd cmdln-1.1.2
     python setup.py install
 
 If your install fails then please visit [the Troubleshooting
@@ -161,6 +161,9 @@ Read the [Getting Started docs](docs/getting_started.html) next.
 Change Log
 ----------
 
+### v1.1.2
+- Some Python 2.6-ification. No functional change.
+
 ### v1.1.1
 - Issue 1: fix readline-based completion and history (from Joshua
   Gallagher).
@@ -171,6 +174,10 @@ Change Log
   option list help output (r4).
 - Moved project to Google Code (http://code.google.com/p/cmdln)
   for Subversion there and for the issue tracker.
+
+### v1.1.0
+- Experimental Bash completion integration. See "bash completion support"
+  section in cmdln.py for details.
 
 ### v1.0.0
 - [backward incompat] `Cmdln.main()` no longer takes an `optparser`
