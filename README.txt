@@ -161,6 +161,11 @@ Read the [Getting Started docs](docs/getting_started.html) next.
 Change Log
 ----------
 
+### v1.1.3  (not released yet)
+- Stop using `string.whitespace` because it can be an 8-bit string with
+  non-ASCII chars in it, leading to potential `UnicodeDecodeError`s. See
+  Komodo Bug 81316.
+
 ### v1.1.2
 - Some Python 2.6-ification. No functional change.
 

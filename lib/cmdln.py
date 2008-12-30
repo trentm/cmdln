@@ -35,7 +35,7 @@ See the README.txt or <http://trentm.com/projects/cmdln/> for more
 details.
 """
 
-__version_info__ = (1, 1, 2)
+__version_info__ = (1, 1, 3)
 __version__ = '.'.join(map(str, __version_info__))
 
 import os
@@ -1273,12 +1273,12 @@ def line2argv(line):
     True
     True
     """
-    import string
     line = line.strip()
     argv = []
     state = "default"
     arg = None  # the current argument being parsed
     i = -1
+    WHITESPACE = '\t\n\x0b\x0c\r '  # don't use string.whitespace (bug 81316)
     while 1:
         i += 1
         if i >= len(line): break
@@ -1312,7 +1312,7 @@ def line2argv(line):
             elif ch == "'":
                 if arg is None: arg = ""
                 state = "single-quoted"
-            elif ch in string.whitespace:
+            elif ch in WHITESPACE:
                 if arg is not None:
                     argv.append(arg)
                 arg = None
