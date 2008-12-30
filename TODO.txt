@@ -3,6 +3,7 @@ High Priority
 
 - issue 3
 - announce a release on python-announce
+- cmdln 1.1.3 with recent fixes
 - new top-level option handling (isn't most or all of this done?):
     - hint at other features in getting started
     - write a reference doc:
