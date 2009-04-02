@@ -18,6 +18,7 @@ High Priority
 Prioritize These
 ================
 
+- look at http://pypi.python.org/pypi/cmd2
 - TODO: possible quick hack to have ${command_list} display sub commands in
   the order in which they are defined? Also provide a sort_command_list()
   hook (or some name like that).
