@@ -12,6 +12,9 @@ High Priority
     - update thirtyboxes.py to use this new option handler
     - clear out the other issues here 
     - test suite
+- drop the src/trentm.com stuff
+- add a note to README about related projects, specifically optfunc is
+  interesting.
 
 
 
