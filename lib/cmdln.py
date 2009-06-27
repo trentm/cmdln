@@ -1,8 +1,7 @@
 #!/usr/bin/env python
-# Copyright (c) 2002-2007 ActiveState Software Inc.
+# Copyright (c) 2002-2009 ActiveState Software Inc.
 # License: MIT (see LICENSE.txt for license details)
 # Author:  Trent Mick
-# Home:    http://trentm.com/projects/cmdln/
 
 """An improvement on Python's standard cmd.py module.
 
@@ -118,8 +117,6 @@ class RawCmdln(cmd.Cmd):
             shell = MySVN()
             retval = shell.main()
             sys.exit(retval)
-
-    See <http://trentm.com/projects/cmdln> for more information.
     """
     name = None      # if unset, defaults basename(sys.argv[0])
     prompt = None    # if unset, defaults to self.name+"> "
