@@ -617,7 +617,7 @@ class RawCmdln(cmd.Cmd):
         help = help.replace(indent+marker+suffix, block, 1)
         return help
 
-    def _help_get_command_list(self):
+    def _get_cmds_data(self):
         # Find any aliases for commands.
         token2canonical = self._get_canonical_map()
         aliases = {}
@@ -668,7 +668,7 @@ class RawCmdln(cmd.Cmd):
         indent, indent_width = _get_indent(marker, help)
         suffix = _get_trailing_whitespace(marker, help)
 
-        linedata = self._help_get_command_list()
+        linedata = self._get_cmds_data()
         if linedata:
             subindent = indent + ' '*4
             lines = _format_linedata(linedata, subindent, indent_width+4)
@@ -689,22 +689,26 @@ class RawCmdln(cmd.Cmd):
             for name in dir(aclass):
                 yield (name, getattr(aclass, name))
 
+    def _get_help_names(self):
+        """Return a mapping of help topic name to `.help_*()` method."""
+        # Determine the additional help topics, if any.
+        help_names = {}
+        token2cmdname = self._get_canonical_map()
+        for attrname, attr in self._gen_names_and_attrs():
+            if not attrname.startswith("help_"): continue
+            help_name = attrname[5:]
+            if help_name not in token2cmdname:
+                help_names[help_name] = attr
+        return help_names
+
     def _help_preprocess_help_list(self, help, cmdname=None):
         marker = "${help_list}"
         indent, indent_width = _get_indent(marker, help)
         suffix = _get_trailing_whitespace(marker, help)
 
-        # Determine the additional help topics, if any.
-        helpnames = {}
-        token2cmdname = self._get_canonical_map()
-        for attrname, attr in self._gen_names_and_attrs():
-            if not attrname.startswith("help_"): continue
-            helpname = attrname[5:]
-            if helpname not in token2cmdname:
-                helpnames[helpname] = attr
-
-        if helpnames:
-            linedata = [(n, a.__doc__ or "") for n, a in helpnames.items()]
+        help_names = self._get_help_names()
+        if help_names:
+            linedata = [(n, a.__doc__ or "") for n, a in help_names.items()]
             linedata.sort()
 
             subindent = indent + ' '*4
@@ -1144,7 +1148,7 @@ def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
         DESCRIPTION  (if `description` is given)
         OPTIONS
         COMMANDS
-        ...extra help topics...
+        HELP TOPICS (if any) 
     
     @param obj {Cmdln} Instance of Cmdln subclass for which to generate
         man page content.
@@ -1199,19 +1203,24 @@ def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
         section += ".B %s\n" % opts
         section += "%s\n" % _dedent(desc.lstrip(), skip_first_line=True)
     sections.append(section)
-    
+
     section = ".SH COMMANDS\n"
-    cmds = obj._help_get_command_list()
+    cmds = obj._get_cmds_data()
     for cmdstr, doc in cmds:
         cmdname = cmdstr.split(' ')[0]  # e.g. "commit (ci)" -> "commit"
         doc = obj._help_reindent(doc, indent="")
         doc = obj._help_preprocess(doc, cmdname)
         doc = doc.rstrip() + "\n"  # trim down trailing space
-        section += '.TP\n\\fB%s\\fR\n%s\n' % (cmdstr, doc)
+        section += '.PP\n.SS %s\n%s\n' % (cmdstr, doc)
     sections.append(section)
     
-    #TODO: _help_preprocess_help_list: do these as separate sections
-    #  each (e.g. "DATE FORMATS" section in `man hg`)
+    section = ".SH HELP TOPICS\n"
+    help_names = obj._get_help_names()
+    for help_name, help_meth in sorted(help_names.items()):
+        help = help_meth(obj)
+        help = obj._help_reindent(help, indent="")
+        section += '.PP\n.SS %s\n%s\n' % (help_name, help)
+    sections.append(section)
 
     if author:
         sections.append(".SH AUTHOR\n%s\n" % author)
