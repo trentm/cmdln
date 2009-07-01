@@ -38,6 +38,8 @@ class clean(Task):
             "build",
             "MANIFEST",
             "*.pyc",
+            "docs/*.pyc",
+            "examples/*.pyc",
             "lib/*.pyc",
         ]
         for pattern in patterns:
@@ -51,47 +53,6 @@ class sdist(Task):
         sh.run_in_dir("%spython setup.py sdist -f --formats zip"
                         % _setup_command_prefix(),
                       self.dir, self.log.debug)
-
-class webdist(Task):
-    """Build a web dist package for trentm.com/projects/
-    
-    "Web dist" packages are zip files with '.web' extension. All files in
-    the zip must be under a dir named after the project. There must be a
-    webinfo.xml file at <projname>/webinfo.xml. This file is "defined"
-    by the parsing in trentm.com/build.py.
-    """ 
-    deps = ["docs"]
-
-    def results(self):
-        yield join(self.dir, "dist", "cmdln-%s.web" % _get_version())
-
-    def make(self):
-        assert sys.platform != "win32", "'webdist' not implemented for win32"
-        build_dir = join(self.dir, "build", "webdist")
-        zip_dir = join(build_dir, "cmdln")
-        if exists(build_dir):
-            sh.rm(build_dir)
-        os.makedirs(zip_dir)
-
-        # Copy the webdist bits to the build tree.
-        manifest = [
-            "src/trentm.com/project-info.xml",
-            "src/trentm.com/index.markdown",
-            "LICENSE.txt",
-            "lib/cmdln.py",
-            "src/trentm.com/logo.jpg",
-        ]
-        for src in manifest:
-            sh.cp(src, dstdir=zip_dir, log=self.log.info)
-
-        # Zip up the webdist contents.
-        dist_dir = join(self.dir, "dist")
-        bit = abspath(join(dist_dir, "cmdln-%s.web" % _get_version()))
-        if exists(bit):
-            os.remove(bit)
-        if not exists(dist_dir):
-            os.makedirs(dist_dir)
-        sh.run_in_dir("zip -r %s cmdln" % bit, build_dir, self.log.info)
 
 class pypi_upload(Task):
     """Upload release to pypi."""
@@ -132,31 +93,6 @@ class googlecode_upload(Task):
         import webbrowser
         webbrowser.open_new(project_url)
 
-class trentm_com_upload(Task):
-    """Upload webdist to trentm.com bits (in prep for updating trentm.com)."""
-    deps = ["webdist"]
-    def make(self):
-        ver = _get_version()
-        dist_dir = join(self.dir, "dist")
-
-        paths = [join(dist_dir, "cmdln-%s%s" % (ver, ext))
-                 for ext in [".web"]]
-
-        # Upload the bits.
-        user = "trentm"
-        host = "trentm.com"
-        remote_dir = "~/data/bits/cmdln/%s" % _get_version()
-        if sys.platform == "win32":
-            ssh = "plink"
-            scp = "pscp -unsafe"
-        else:
-            ssh = "ssh"
-            scp = "scp"
-        sh.run("%s %s@%s 'mkdir -p %s'" % (ssh, user, host, remote_dir),
-               self.log.info)
-        for path in paths:
-            sh.run("%s %s %s@%s:%s" % (scp, path, user, host, remote_dir),
-                   self.log.info)
 
 class todo(Task):
     """Print out todo's and xxx's in the docs area."""
@@ -174,36 +110,6 @@ class todo(Task):
     def _dump_pattern_in_path(self, pattern, path):
         os.system("grep -nH '%s' '%s'" % (pattern, path))
 
-
-class docs(Task):
-    """Regenerate some doc bits from project-info.xml."""
-    deps = ["src/trentm.com/project-info.xml"]
-    results = [
-        "README.txt",
-        "src/trentm.com/index.markdown"
-    ]
-    def make(self):
-        project_info_xml = join("src", "trentm.com", "project-info.xml")
-        index_markdown = join("src", "trentm.com", "index.markdown")
-        sh.run_in_dir("projinfo -f %s -R -o README.txt --force"
-                      % project_info_xml, self.dir)
-        sh.run_in_dir("projinfo -f %s --index-markdown -o %s --force"
-                      % (project_info_xml, index_markdown), self.dir)
-
-class check_version(Task):
-    """grep for version strings in source code
-    
-    List all things that look like version strings in the source code.
-    Used for checking that versioning is updated across the board.  
-    """
-    sources = [
-        "lib/cmdln.py",
-        "src/trentm.com/project-info.xml",
-    ]
-    def make(self):
-        pattern = r'[0-9]\+\(\.\|, \)[0-9]\+\(\.\|, \)[0-9]\+'
-        sh.run_in_dir('grep -n "%s" %s' % (pattern, ' '.join(self.sources)),
-                      self.dir)
 
 
 #---- internal support stuff
