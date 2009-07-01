@@ -1177,7 +1177,6 @@ def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
         '.TH %(ucname)s "1" "%(date)s" "%(name)s%(version_str)s" "User Commands"\n'
         % data)
     sections.append(".SH NAME\n%(name)s%(summary_str)s\n" % data)
-    #TODO: Use _help_preprocess_cmd_usage for synopsis here?
     sections.append(_dedent(r"""
         .SH SYNOPSIS
         .B %(name)s
