@@ -3,9 +3,9 @@
 import sys
 import textwrap
 
-# use cmdln.py up one dir (for development)
-from os.path import dirname
-sys.path.insert(0, dirname(dirname(__file__)))
+# Use ../lib/cmdln.py.
+from os.path import dirname, join, abspath
+sys.path.insert(0, join(dirname(dirname(abspath(__file__))), "lib"))
 try:
     import cmdln
 finally:

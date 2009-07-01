@@ -1138,7 +1138,7 @@ class Cmdln(RawCmdln):
 
 #---- support for generating `man` page output from a Cmdln class
 
-def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
+def man_sections_from_cmdln(inst, summary=None, description=None, author=None):
     """Return man page sections appropriate for the given Cmdln instance.
     Join these sections for man page content.
     
@@ -1150,7 +1150,7 @@ def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
         COMMANDS
         HELP TOPICS (if any) 
     
-    @param obj {Cmdln} Instance of Cmdln subclass for which to generate
+    @param inst {Cmdln} Instance of Cmdln subclass for which to generate
         man page content.
     @param summary {str} A one-liner summary of the command.
     @param description {str} A description of the command. If given,
@@ -1160,15 +1160,15 @@ def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
     @raises {ValueError} if man page content cannot be generated for the
         given class.
     """
-    if not obj.__class__.name:
+    if not inst.__class__.name:
         raise ValueError("cannot generate man page content: `name` is not "
-            "set on class %r" % obj.__class__)
+            "set on class %r" % inst.__class__)
     data = {
-        "name": obj.name,
-        "ucname": obj.name.upper(),
+        "name": inst.name,
+        "ucname": inst.name.upper(),
         "date": datetime.date.today().strftime("%b %Y"), 
         "cmdln_version": __version__,
-        "version_str": obj.version and " %s" % obj.version or "",
+        "version_str": inst.version and " %s" % inst.version or "",
         "summary_str": summary and r" \- %s" % summary or "",
     }
     
@@ -1189,10 +1189,10 @@ def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
         sections.append(".SH DESCRIPTION\n%s\n" % description)
 
     section = ".SH OPTIONS\n"
-    if not hasattr(obj, "optparser") is None:
+    if not hasattr(inst, "optparser") is None:
         #HACK: In case `.main()` hasn't been run.
-        obj.optparser = obj.get_optparser()
-    lines = obj._help_preprocess("${option_list}", None).splitlines(False)
+        inst.optparser = inst.get_optparser()
+    lines = inst._help_preprocess("${option_list}", None).splitlines(False)
     for line in lines[1:]:
         line = line.lstrip()
         if not line:
@@ -1204,22 +1204,23 @@ def man_sections_from_cmdln(obj, summary=None, description=None, author=None):
     sections.append(section)
 
     section = ".SH COMMANDS\n"
-    cmds = obj._get_cmds_data()
+    cmds = inst._get_cmds_data()
     for cmdstr, doc in cmds:
         cmdname = cmdstr.split(' ')[0]  # e.g. "commit (ci)" -> "commit"
-        doc = obj._help_reindent(doc, indent="")
-        doc = obj._help_preprocess(doc, cmdname)
+        doc = inst._help_reindent(doc, indent="")
+        doc = inst._help_preprocess(doc, cmdname)
         doc = doc.rstrip() + "\n"  # trim down trailing space
         section += '.PP\n.SS %s\n%s\n' % (cmdstr, doc)
     sections.append(section)
     
-    section = ".SH HELP TOPICS\n"
-    help_names = obj._get_help_names()
-    for help_name, help_meth in sorted(help_names.items()):
-        help = help_meth(obj)
-        help = obj._help_reindent(help, indent="")
-        section += '.PP\n.SS %s\n%s\n' % (help_name, help)
-    sections.append(section)
+    help_names = inst._get_help_names()
+    if help_names:
+        section = ".SH HELP TOPICS\n"
+        for help_name, help_meth in sorted(help_names.items()):
+            help = help_meth(inst)
+            help = inst._help_reindent(help, indent="")
+            section += '.PP\n.SS %s\n%s\n' % (help_name, help)
+        sections.append(section)
 
     if author:
         sections.append(".SH AUTHOR\n%s\n" % author)
