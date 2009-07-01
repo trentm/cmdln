@@ -1240,17 +1240,17 @@ def _format_linedata(linedata, indent, indent_width):
         "indent_width" is a number of columns by which the
             formatted data will be indented when printed.
 
-    The <item-display-string> column is held to 15 columns.
+    The <item-display-string> column is held to 30 columns.
     """
     lines = []
     WIDTH = 78 - indent_width
     SPACING = 2
     NAME_WIDTH_LOWER_BOUND = 13
-    NAME_WIDTH_UPPER_BOUND = 16
+    NAME_WIDTH_UPPER_BOUND = 30
     NAME_WIDTH = max([len(s) for s,d in linedata])
     if NAME_WIDTH < NAME_WIDTH_LOWER_BOUND:
         NAME_WIDTH = NAME_WIDTH_LOWER_BOUND
-    else:
+    elif NAME_WIDTH > NAME_WIDTH_UPPER_BOUND:
         NAME_WIDTH = NAME_WIDTH_UPPER_BOUND
 
     DOC_WIDTH = WIDTH - NAME_WIDTH - SPACING
