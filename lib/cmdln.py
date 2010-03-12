@@ -417,7 +417,7 @@ class RawCmdln(cmd.Cmd):
 
             "argv" is the command and arguments to run.
         
-        The default implementation writes and error message to stderr
+        The default implementation writes an error message to stderr
         and returns an error exit status.
 
         Returns a numeric command exit status.
