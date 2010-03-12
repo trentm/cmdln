@@ -332,6 +332,8 @@ class RawCmdln(cmd.Cmd):
                             line = raw_input(self._prompt_str)
                         except EOFError:
                             line = 'EOF'
+                        except KeyboardInterrupt:
+                            line = 'KeyboardInterrupt'
                     else:
                         self.stdout.write(self._prompt_str)
                         self.stdout.flush()
@@ -406,7 +408,10 @@ class RawCmdln(cmd.Cmd):
         if cmdname:
             handler = self._get_cmd_handler(cmdname)
             if handler:
-                return self._dispatch_cmd(handler, argv)
+                try:
+                    return self._dispatch_cmd(handler, argv)
+                except KeyboardInterrupt:
+                    return self.onecmd(["KeyboardInterrupt"])
         return self.default(argv)
 
     def _dispatch_cmd(self, handler, argv):
@@ -877,12 +882,18 @@ class RawCmdln(cmd.Cmd):
 
     def _do_EOF(self, argv):
         # Default EOF handler
-        # Note: an actual EOF is redirected to this command.
-        #TODO: separate name for this. Currently it is available from
-        #      command-line. Is that okay?
+        # TODO: A mechanism so "EOF" and "KeyboardInterrupt" work as handlers
+        #       but are *not* real available commands.
         self.stdout.write('\n')
         self.stdout.flush()
         self.stop = True
+
+    def _do_KeyboardInterrupt(self, argv):
+        # Default keyboard interrupt (i.e. <Ctrl+C>) handler.
+        # TODO: A mechanism so "EOF" and "KeyboardInterrupt" work as handlers
+        #       but are *not* real available commands.
+        self.stdout.write('\n')
+        self.stdout.flush()
 
     def emptyline(self):
         # Different from cmd.Cmd: don't repeat the last command for an
@@ -1636,6 +1647,7 @@ if __name__ == "__main__" and len(sys.argv) == 6:
         shell = getattr(script, class_name)()
         cmd_map = shell._get_canonical_map()
         del cmd_map["EOF"]
+        del cmd_map["KeyboardInterrupt"]
 
         # Determine if completing the sub-command name.
         parts = comp_line[:comp_point].split(None, 1)
