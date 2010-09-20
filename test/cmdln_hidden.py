@@ -27,9 +27,9 @@ import cmdln
 class Shell(cmdln.RawCmdln):
     name = "shell"
     def do_visible(self, argv):
-        print "hi from visible command"
+        print("hi from visible command")
     def do_hidden(self, argv):
-        print "hi from hidden command"
+        print("hi from hidden command")
 
 if __name__ == "__main__":
     sys.exit( Shell().main(loop=cmdln.LOOP_IF_EMPTY) )

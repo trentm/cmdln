@@ -20,7 +20,7 @@ class HelloWorld(cmdln.RawCmdln):
     def do_hi(self, argv):
         """say hi"""
         name = len(argv)>1 and argv[1] or "stranger"
-        print "Hi, %s!" % name
+        print("Hi, %s!" % name)
 
 if __name__ == "__main__":
     sys.exit(HelloWorld().main(loop=cmdln.LOOP_IF_EMPTY))

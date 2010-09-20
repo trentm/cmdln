@@ -20,7 +20,7 @@ class Shell(cmdln.RawCmdln):
     name = u"n\xe4me"
     intro = u"Welc\xf6me t\xf6 my shell."
     def do_hi(self, argv):
-        print "hi"
+        print("hi")
 
 
 if __name__ == "__main__":

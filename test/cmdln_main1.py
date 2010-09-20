@@ -17,7 +17,7 @@ class Shell(cmdln.RawCmdln):
     "This is my shell."
     name = "shell"
     def do_foo(self, argv):
-        print "hello from foo"
+        print("hello from foo")
 
 if __name__ == "__main__":
     sys.exit( Shell().main(loop=cmdln.LOOP_IF_EMPTY) )

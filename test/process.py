@@ -141,6 +141,8 @@ import pprint
 import errno
 import logging
 
+PY3 = sys.version_info[0] == 3
+
 if sys.platform.startswith("win"):
     import msvcrt
     import win32api
@@ -253,7 +255,8 @@ def _readRetryOnEINTR(fd, buffersize):
     while 1:
         try:
             return os.read(fd, buffersize)
-        except OSError, e:
+        except OSError:
+            _, e, _ = sys.exc_info()
             if e.errno == errno.EINTR:
                 continue
             else:
@@ -266,10 +269,13 @@ def _writeRetryOnEINTR(fd, s):
         [EINTR]     A signal interrupted the write before it could
                     be completed.
     """
+    if PY3:
+        s = s.encode('latin-1')
     while 1:
         try:
             return os.write(fd, s)
-        except OSError, e:
+        except OSError:
+            _, e, _ = sys.exc_info()
             if e.errno == errno.EINTR:
                 continue
             else:
@@ -285,7 +291,8 @@ def _waitpidRetryOnEINTR(pid, options):
     while 1:
         try:
             return os.waitpid(pid, options)
-        except OSError, e:
+        except OSError:
+            _, e, _ = sys.exc_info()
             if e.errno == errno.EINTR:
                 continue
             else:
@@ -383,7 +390,8 @@ _SaferCreateProcess(appName=%r,
                 = win32process.CreateProcess(appName, cmd, processSA,
                                              threadSA, inheritHandles,
                                              creationFlags, env, cwd, si)
-        except TypeError, ex:
+        except TypeError:
+            _, ex, _ = sys.exc_info()
             if ex.args == ('All dictionary items must be strings, or all must be unicode',):
                 # Try again with an all unicode environment.
                 #XXX Would be nice if didn't have to depend on the error
@@ -395,7 +403,8 @@ _SaferCreateProcess(appName=%r,
                     try:
                         for key, value in env.items():
                             aenv[str(key)] = str(value)
-                    except UnicodeError, ex:
+                    except UnicodeError:
+                        _, ex, _ = sys.exc_info()
                         raise ProcessError(str(ex))
                     env = aenv
                 elif env:
@@ -441,7 +450,8 @@ def _registerProcess(process):
                 timeout = os.WNOHANG
             p.wait(timeout)
             _unregisterProcess(p)
-        except ProcessError, ex:
+        except ProcessError:
+            _, ex, _ = sys.exc_info()
             if ex.errno == ProcessProxy.WAIT_TIMEOUT:
                 pass
             else:
@@ -504,16 +514,16 @@ def _fixupCommand(cmd, env=None):
                                "variable to use as the shell")
         # Explicitly check if we are using COMMAND.COM.  If we
         # are then use the w9xpopen hack.
-        elif (win32Version & 0x80000000L == 0) and\
-             (win32Version &        0x5L >= 5) and\
+        elif (win32Version & 0x80000000 == 0) and\
+             (win32Version &        0x5 >= 5) and\
              os.path.basename(comspec).lower() != "command.com":
             # 2000/XP and not using command.com.
             if '"' in cmd or "'" in cmd:
                 cmd = comspec + ' /c "%s"' % cmd
             else:
                 cmd = comspec + ' /c ' + cmd
-        elif (win32Version & 0x80000000L == 0) and\
-             (win32Version &        0x5L  < 5) and\
+        elif (win32Version & 0x80000000 == 0) and\
+             (win32Version &        0x5  < 5) and\
              os.path.basename(comspec).lower() != "command.com":
             # NT and not using command.com.
             try:
@@ -598,7 +608,8 @@ class _FileWrapper:
             log.info("[%s] _FileWrapper.read: waiting for read on pipe",
                      id(self))
             errCode, text = win32file.ReadFile(self._handle, nBytes)
-        except pywintypes.error, ex:
+        except pywintypes.error:
+            _, ex, _ = sys.exc_info()
             # Ignore errors for now, like "The pipe is being closed.",
             # etc. XXX There *may* be errors we don't want to avoid.
             log.info("[%s] _FileWrapper.read: error reading from pipe: %s",
@@ -716,7 +727,8 @@ class _FileWrapper:
         elif self._handle is not None:
             try:
                 errCode, nBytesWritten = win32file.WriteFile(self._handle, text)
-            except pywintypes.error, ex:
+            except pywintypes.error:
+                _, ex, _ = sys.exc_info()
                 # Ingore errors like "The pipe is being closed.", for
                 # now.
                 log.info("[%s] _FileWrapper.write: error writing to pipe, "\
@@ -750,7 +762,8 @@ class _FileWrapper:
             if self._descriptor is not None:
                 try:
                     os.close(self._descriptor)
-                except OSError, ex:
+                except OSError:
+                    _, ex, _ = sys.exc_info()
                     if ex.errno == 9:
                         # Ignore: OSError: [Errno 9] Bad file descriptor
                         # XXX *Should* we be ignoring this? It appears very
@@ -904,7 +917,8 @@ class Process:
             oldDir = os.getcwd()
             try:
                 os.chdir(self._cwd)
-            except OSError, ex:
+            except OSError:
+                _, ex, _ = sys.exc_info()
                 raise ProcessError(msg=str(ex), errno=ex.errno)
         self._forkAndExecChildOnUnix()
 
@@ -952,7 +966,8 @@ class Process:
                     self._cwd,      # current working directory
                     si)             # STARTUPINFO pointer 
             win32api.CloseHandle(self._hThread)
-        except win32api.error, ex:
+        except win32api.error:
+            _, ex, _ = sys.exc_info()
             raise ProcessError(msg="Error creating process for '%s': %s"\
                                    % (cmd, ex.args[2]),
                                errno=ex.args[0])
@@ -1047,7 +1062,8 @@ class Process:
                 log.warn("The win32api module does not have "\
                          "GenerateConsoleCtrlEvent(). This may mean that "\
                          "parts of this process group have NOT been killed.")
-            except win32api.error, ex:
+            except win32api.error:
+                _, ex, _ = sys.exc_info()
                 if ex.args[0] not in (6, 87):
                     # Ignore the following:
                     #   api_error: (87, 'GenerateConsoleCtrlEvent', 'The parameter is incorrect.')
@@ -1059,7 +1075,8 @@ class Process:
             retval = 0
             try:
                 self.wait(gracePeriod)
-            except ProcessError, ex:
+            except ProcessError:
+                _, ex, _ = sys.exc_info()
                 log.info("[%s] Process.kill: calling TerminateProcess", id(self))
                 win32process.TerminateProcess(self._hProcess, -1)
                 win32api.Sleep(100) # wait for resources to be released
@@ -1069,7 +1086,8 @@ class Process:
                 sig = signal.SIGKILL
             try:
                 os.kill(self._pid, sig)
-            except OSError, ex:
+            except OSError:
+                _, ex, _ = sys.exc_info()
                 if ex.errno != 3:
                     # Ignore:   OSError: [Errno 3] No such process
                     raise
@@ -1195,7 +1213,8 @@ class ProcessOpen(Process):
             oldDir = os.getcwd()
             try:
                 os.chdir(self._cwd)
-            except OSError, ex:
+            except OSError:
+                _, ex, _ = sys.exc_info()
                 raise ProcessError(msg=str(ex), errno=ex.errno)
         self._forkAndExecChildOnUnix(fdChildStdinRd, fdChildStdoutWr,
                                      fdChildStderrWr)
@@ -1310,7 +1329,8 @@ class ProcessOpen(Process):
                         self._env,      # environment
                         self._cwd,      # current working directory
                         si)             # STARTUPINFO pointer 
-            except win32api.error, ex:
+            except win32api.error:
+                _, ex, _ = sys.exc_info()
                 raise ProcessError(msg=ex.args[2], errno=ex.args[0])
             win32api.CloseHandle(hThread)
 
@@ -1416,7 +1436,8 @@ class ProcessOpen(Process):
                 log.warn("The win32api module does not have "\
                          "GenerateConsoleCtrlEvent(). This may mean that "\
                          "parts of this process group have NOT been killed.")
-            except win32api.error, ex:
+            except win32api.error:
+                _, ex, _ = sys.exc_info()
                 if ex.args[0] not in (6, 87):
                     # Ignore the following:
                     #   api_error: (87, 'GenerateConsoleCtrlEvent', 'The parameter is incorrect.')
@@ -1428,7 +1449,8 @@ class ProcessOpen(Process):
             retval = 0
             try:
                 self.wait(gracePeriod)
-            except ProcessError, ex:
+            except ProcessError:
+                _, ex, _ = sys.exc_info()
                 log.info("[%s] Process.kill: calling TerminateProcess", id(self))
                 win32process.TerminateProcess(self._hProcess, -1)
                 win32api.Sleep(100) # wait for resources to be released
@@ -1438,7 +1460,8 @@ class ProcessOpen(Process):
                 sig = signal.SIGKILL
             try:
                 os.kill(self._pid, sig)
-            except OSError, ex:
+            except OSError:
+                _, ex, _ = sys.exc_info()
                 if ex.errno != 3:
                     # Ignore:   OSError: [Errno 3] No such process
                     raise
@@ -1614,7 +1637,8 @@ class ProcessProxy(Process):
             oldDir = os.getcwd()
             try:
                 os.chdir(self._cwd)
-            except OSError, ex:
+            except OSError:
+                _, ex, _ = sys.exc_info()
                 raise ProcessError(msg=str(ex), errno=ex.errno)
         self._forkAndExecChildOnUnix(fdChildStdinRd, fdChildStdoutWr,
                                      fdChildStderrWr)
@@ -1750,7 +1774,8 @@ class ProcessProxy(Process):
                         self._env,      # environment
                         self._cwd,      # current working directory
                         si)             # STARTUPINFO pointer 
-            except win32api.error, ex:
+            except win32api.error:
+                _, ex, _ = sys.exc_info()
                 raise ProcessError(msg=ex.args[2], errno=ex.args[0])
             win32api.CloseHandle(hThread)
 
@@ -1867,7 +1892,8 @@ class ProcessProxy(Process):
                 log.warn("The win32api module does not have "\
                          "GenerateConsoleCtrlEvent(). This may mean that "\
                          "parts of this process group have NOT been killed.")
-            except win32api.error, ex:
+            except win32api.error:
+                _, ex, _ = sys.exc_info()
                 if ex.args[0] not in (6, 87):
                     # Ignore the following:
                     #   api_error: (87, 'GenerateConsoleCtrlEvent', 'The parameter is incorrect.')
@@ -1879,7 +1905,8 @@ class ProcessProxy(Process):
             retval = 0
             try:
                 self.wait(gracePeriod)
-            except ProcessError, ex:
+            except ProcessError:
+                _, ex, _ = sys.exc_info()
                 log.info("[%s] Process.kill: calling TerminateProcess", id(self))
                 win32process.TerminateProcess(self._hProcess, -1)
                 win32api.Sleep(100) # wait for resources to be released
@@ -1889,7 +1916,8 @@ class ProcessProxy(Process):
                 sig = signal.SIGKILL
             try:
                 os.kill(self._pid, sig)
-            except OSError, ex:
+            except OSError:
+                _, ex, _ = sys.exc_info()
                 if ex.errno != 3:
                     # Ignore:   OSError: [Errno 3] No such process
                     raise
@@ -2140,7 +2168,8 @@ class _InFileProxy(threading.Thread):
             #log.debug("XXX          -> start read on %r" % self.fParent)
             try:
                 text = self.fParent.read(CHUNKSIZE)
-            except ValueError, ex:
+            except ValueError:
+                _, ex, _ = sys.exc_info()
                 # ValueError is raised with trying to write to a closed
                 # file/pipe.
                 text = None
@@ -2159,7 +2188,8 @@ class _InFileProxy(threading.Thread):
                         self.fChild.close()
                     except IOError:
                         pass # Ignore: IOError: [Errno 4] Interrupted system call
-                except IOError, ex:
+                except IOError:
+                    _, ex, _ = sys.exc_info()
                     # Ignore: IOError: [Errno 9] Bad file descriptor
                     # XXX Do we *know* we want to do that?
                     pass
@@ -2172,7 +2202,8 @@ class _InFileProxy(threading.Thread):
                      self.getName(), id(self), text, self.fChild)
             try:
                 self.fChild.write(text)
-            except (OSError, IOError), ex:
+            except (OSError, IOError):
+                _, ex, _ = sys.exc_info()
                 # Ignore errors for now. For example:
                 # - Get this on Win9x when writing multiple lines to "dir":
                 #   OSError: [Errno 32] Broken pipe
@@ -2241,7 +2272,8 @@ class _OutFileProxy(threading.Thread):
                 log.info("[%s] _OutFileProxy: waiting for read on child (%r)"\
                          % (self.getName(), self.fChild))
                 text = self.fChild.read(CHUNKSIZE)
-            except IOError, ex:
+            except IOError:
+                _, ex, _ = sys.exc_info()
                 # Ignore: IOError: [Errno 9] Bad file descriptor
                 # XXX Do we *know* we want to do that?
                 log.info("[%s] _OutFileProxy: error reading from child (%r), "\
@@ -2328,7 +2360,8 @@ if sys.platform.startswith("linux"):
             # finished.
             try:
                 waitResult = self._pclass.wait(self)
-            except ProcessError, ex:
+            except ProcessError:
+                _, ex, _ = sys.exc_info()
                 waitResult = ex
             self.__hasTerminated.acquire()
             self.__terminationResult = waitResult

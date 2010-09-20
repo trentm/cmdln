@@ -260,7 +260,7 @@ def _testOneCmdln(self, modname, fname):
 
     mod = __import__(modname)
     doc = mod.__doc__
-    if isinstance(doc, str if PY3 else unicode):
+    if not PY3 and isinstance(doc, unicode):
         doc = doc.encode("utf-8")
     expect = generate_expect(doc)
     if False:

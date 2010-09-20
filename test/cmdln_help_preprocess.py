@@ -102,9 +102,9 @@ class MySVN(cmdln.Cmdln):
         ${cmd_option_list}
         ...discussion...
         """
-        print "handle 'svn %s'" % subcmd
-        print "...opts=%s" % opts
-        print "...paths=%s" % (paths,)
+        print("handle 'svn %s'" % subcmd)
+        print("...opts=%s" % opts)
+        print("...paths=%s" % paths)
 
     def help_foo(self):
         return """

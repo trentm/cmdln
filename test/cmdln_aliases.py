@@ -28,7 +28,7 @@ import cmdln
 class Shell(cmdln.RawCmdln):
     def do_foo(self, argv):
         "shazam!"
-        print "hello from foo"
+        print("hello from foo")
     do_foo.aliases = ["f", "!"]
 
 if __name__ == "__main__":

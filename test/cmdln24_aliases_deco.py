@@ -37,13 +37,13 @@ class Shell(cmdln.Cmdln):
     @cmdln.alias('f', '!')
     def do_foo(self, argv):
         "shazam!"
-        print "hello from foo"
+        print("hello from foo")
 
     @cmdln.alias('ba')
     @cmdln.alias('b')
     def do_bar(self, argv):
         "whopee!"
-        print "hello from bar"
+        print("hello from bar")
 
 if __name__ == "__main__":
     shell = Shell()
