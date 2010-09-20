@@ -24,6 +24,8 @@ def setup():
 
 #TODO: hook test_doctests.py into this
 if __name__ == "__main__":
-    retval = testlib.harness(setup_func=setup)
+    retval = testlib.harness(
+        testdir_from_ns={None: dirname(abspath(__file__))},
+        setup_func=setup)
     sys.exit(retval)
 
