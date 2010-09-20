@@ -26,9 +26,10 @@ import unittest
 import difflib
 import pprint
 import shutil
-import StringIO
 import glob
 
+
+PY3 = sys.version_info[0] == 3
 
 
 #---- support stuff
@@ -259,7 +260,7 @@ def _testOneCmdln(self, modname, fname):
 
     mod = __import__(modname)
     doc = mod.__doc__
-    if isinstance(doc, unicode):
+    if isinstance(doc, str if PY3 else unicode):
         doc = doc.encode("utf-8")
     expect = generate_expect(doc)
     if False:
