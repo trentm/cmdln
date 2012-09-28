@@ -1,5 +1,11 @@
 # cmdln Changelog
 
+## 1.2.1 (not yet released)
+
+- Fix tab-completion on Mac with Python builds that build against editline
+  where `readline.parse_and_bind` have different syntax.
+
+
 ## 1.2.0
 
 - Issue 3: Raise upper bound width for left column in "Commands" and "help

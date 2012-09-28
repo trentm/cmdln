@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# Copyright (c) 2012 Trent Mick
 # Copyright (c) 2002-2009 ActiveState Software Inc.
 # License: MIT (see LICENSE.txt for license details)
 # Author:  Trent Mick
@@ -34,7 +35,7 @@ See the README.txt or <http://trentm.com/projects/cmdln/> for more
 details.
 """
 
-__version_info__ = (1, 2, 0)
+__version_info__ = (1, 2, 1)
 __version__ = '.'.join(map(str, __version_info__))
 
 import os
@@ -310,7 +311,10 @@ class RawCmdln(cmd.Cmd):
                 import readline
                 self.old_completer = readline.get_completer()
                 readline.set_completer(self.complete)
-                readline.parse_and_bind(self.completekey+": complete")
+                if sys.platform == "darwin":
+                    readline.parse_and_bind("bind ^I rl_complete")
+                else:
+                    readline.parse_and_bind(self.completekey+": complete")
             except ImportError:
                 pass
         try:
