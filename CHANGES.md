@@ -1,5 +1,15 @@
 # cmdln Changelog
 
+## 1.2.0
+
+- Issue 3: Raise upper bound width for left column in "Commands" and "help
+  topics" lists in help output to 30. Also fix buglet in that column
+  formatting.
+- Issue 7: add `man_sections_from_cmdln(...)` for generating decent man page
+  content automatically from a `Cmdln` subclass instance. See
+  ManPageGeneration for an overview.
+
+
 ## 1.1.3  (not released yet)
 
 - Stop using `string.whitespace` because it can be an 8-bit string with
@@ -74,7 +84,7 @@
   Cmdln class and add this to the default help output.
 
 
-## v0.8.0
+## 0.8.0
 
 - First version at which I started stabilizing it for public release.
   I've been batting around modules to improve on `cmd.py` for a long
