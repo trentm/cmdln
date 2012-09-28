@@ -1,28 +1,4 @@
-cmdln.py -- an improved cmd.py
-==============================
-
-Download the latest cmdln.py packages from here:
-    (archive) http://cmdln.googlecode.com/files/cmdln-1.1.2.zip
-
-
-Home            : http://trentm.com/projects/cmdln/
-License         : MIT (see LICENSE.txt)
-Platforms       : Windows, Linux, Mac OS X, Unix
-Current Version : 1.1.2
-Dev Status      : well tested; a similar design has been used in various
-                  heavily used scripts at ActiveState for a while; some
-                  features of this module *are* faily new though
-Requirements    : Python >= 2.3 (http://www.activestate.com/ActivePython/),
-                  (Python >= 2.4 to use some features using decorators)
-Documentation   : Why cmdln.py?
-                  Install Notes
-                  Introduction
-                  Getting Started (docs/getting_started.html)
-                  Change Log
-
-
-Why cmdln.py?
--------------
+# Why cmdln.py?
 
 `cmdln.py` fixes some of the design flaws in `cmd.py` and takes
 advantage of new Python stdlib modules (e.g. optparse) so that it is
@@ -50,27 +26,20 @@ Install notes and intro docs are below. Please send any feedback to
 [Trent Mick](mailto:trentm at google's mail thing).
 
 
-Install Notes
--------------
+# Install
 
-Download the latest `cmdln.py` source package, unzip it, and run
-`python setup.py install`:
+To install it in your Python installation run *one* of the following:
 
-    unzip cmdln-1.1.2.zip
-    cd cmdln-1.1.2
+    pip install cmdln
+    pypm install cmdln      # if you use ActivePython (activestate.com/activepython)
+    easy_install cmdln      # if this is the best you have
     python setup.py install
 
-If your install fails then please visit [the Troubleshooting
-FAQ](http://trentm.com/faq.html#troubleshooting-python-package-installation).
+However, everything you need to run this is in "lib/cmdln.py". If it is
+easier for you, you can just copy that file to somewhere on your PYTHONPATH
+(to use as a module) or executable path (to use as a script).
 
-This will install `cmdln.py` into your Python's site-packages area.
-`cmdln.py` has no external dependencies that aren't part of the Python
-standard library so, if you like, you may simple copy `cmdln.py` into
-your own Python packages.
-
-
-Introduction
-------------
+# Introduction
 
 `cmdln.py` is an extension of Python's default `cmd.py` module that
 provides "a simple framework for writing line-oriented command
@@ -225,4 +194,3 @@ Change Log
   I've been batting around modules to improve on `cmd.py` for a long
   time -- variously called `tm/cmd.py`, 'cmd2.py', 'tmCmd.py',
   'linecmd.py', 'argvcmd.py', etc.
-

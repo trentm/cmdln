@@ -1,0 +1,9 @@
+.tox
+*.pyo
+*.pyc
+tmp
+build
+bits
+MANIFEST
+dist
+
