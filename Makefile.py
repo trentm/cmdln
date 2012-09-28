@@ -297,5 +297,3 @@ def _setup_command_prefix():
         # '._foo' files for extended-attributes for archived files.
         prefix = "COPY_EXTENDED_ATTRIBUTES_DISABLE=1 "
     return prefix
-
-

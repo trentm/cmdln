@@ -10,7 +10,7 @@ High Priority
         - pilfer from docs/diffs_with_cmd.txt and probably drop that doc
     - release
     - update thirtyboxes.py to use this new option handler
-    - clear out the other issues here 
+    - clear out the other issues here
     - test suite
 - drop the src/trentm.com stuff
 - add a note to README about related projects, specifically optfunc is
@@ -83,5 +83,3 @@ Low Priority
   Do this as a subclass to (1) show how to do it and (2) to be useful.
 - RFE: an OptionParser option handler for std command-line way to control
   logging streams
-
-
