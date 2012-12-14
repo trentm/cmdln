@@ -35,7 +35,7 @@ See the README.txt or <http://trentm.com/projects/cmdln/> for more
 details.
 """
 
-__version_info__ = (1, 2, 1)
+__version_info__ = (1, 3, 0)
 __version__ = '.'.join(map(str, __version_info__))
 
 import os
@@ -193,6 +193,9 @@ class RawCmdln(cmd.Cmd):
         options.
 
         When called `self.options' holds the results of the option parse.
+
+        If this returns non-zero/non-None, then command processing is stopped
+        and this retval is returned from `main()`.
         """
         pass
 
@@ -244,7 +247,10 @@ class RawCmdln(cmd.Cmd):
                 return 0
         else:
             self.options, args = None, argv[1:]
-        self.postoptparse()
+
+        retval = self.postoptparse()
+        if retval:
+            return retval
 
         if loop == LOOP_ALWAYS:
             if args:

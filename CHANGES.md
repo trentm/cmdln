@@ -1,6 +1,26 @@
 # cmdln Changelog
 
-## 1.2.1 (not yet released)
+## 1.3.0 (not yet released)
+
+- Change `self.postoptparse()` hook handling to use the retval value. If it
+  is none-zero (or non-None), then `Cmdln.main()` processing exits. This
+  allows a Cmdln subclass to issue a starter command.
+
+  For example, the following "Foo" shell will start by running the "init"
+  subcmd. If that fails (returns non-zero), then `foo.main()` will
+  return right away, instead of entering the REPL loop.
+
+        class Foo(cmdln.Cmdln):
+            def postoptparse(self):
+                ...
+                return self.cmd(['init'])
+
+            def do_init(self, subcmd, opts):
+                ...
+
+        foo = Foo()
+        foo.main()
+
 
 - Fix tab-completion on Mac with Python builds that build against editline
   where `readline.parse_and_bind` have different syntax.
