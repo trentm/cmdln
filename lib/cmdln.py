@@ -153,7 +153,6 @@ class RawCmdln(cmd.Cmd):
         if self.prompt is None:
             self.prompt = self.name+"> "
         self._name_str = self._str(self.name)
-        self._prompt_str = self._str(self.prompt)
         if stdin is not None:
             self.stdin = stdin
         else:
@@ -339,13 +338,13 @@ class RawCmdln(cmd.Cmd):
                 else:
                     if self.use_rawinput:
                         try:
-                            line = raw_input(self._prompt_str)
+                            line = raw_input(self._str(self.prompt))
                         except EOFError:
                             line = 'EOF'
                         except KeyboardInterrupt:
                             line = 'KeyboardInterrupt'
                     else:
-                        self.stdout.write(self._prompt_str)
+                        self.stdout.write(self._str(self.prompt))
                         self.stdout.flush()
                         line = self.stdin.readline()
                         if not len(line):
