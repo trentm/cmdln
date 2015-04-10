@@ -62,6 +62,7 @@ Some options were removed and the doc string truncated for brevity. See
 re-implementation of the `svn` command-line interface.)
 
     #!/usr/bin/env python
+    from __future__ import print_function
     import sys
     import cmdln
 
@@ -79,8 +80,8 @@ re-implementation of the `svn` command-line interface.)
             ${cmd_usage}
             ${cmd_option_list}
             """
-            print "'svn %s' opts:  %s" % (subcmd, opts)
-            print "'svn %s' paths: %s" % (subcmd, paths)
+            print("'svn %s' opts:  %s" % (subcmd, opts))
+            print("'svn %s' paths: %s" % (subcmd, paths))
 
 
     if __name__ == "__main__":
