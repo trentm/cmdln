@@ -6,7 +6,7 @@ all:
 
 .PHONY: clean
 clean:
-	rm -f lib/*.pyc test/*.pyc
+	rm -rf dist build MANIFEST {.,docs,lib,examples,test}/*.pyc
 
 .PHONY: test
 test:
@@ -46,10 +46,18 @@ test34:
 # Ensure CHANGES.md and package.json have the same version.
 .PHONY: versioncheck
 versioncheck:
-	@echo version is: $(shell cat package.json | json version)
-	[[ `cat package.json | json version` == `grep '^## ' CHANGES.md | head -1 | awk '{print $$2}'` ]]
+	@export VERSION=$(shell PYTHONPATH=`pwd`/lib python -c 'import cmdln; print(cmdln.__version__)') \
+	    && echo version is: $$VERSION \
+	    && [[ $$VERSION == `grep '^## ' CHANGES.md | head -1 | awk '{print $$2}'` ]]
+	@echo PASS: all versions match
 
 .PHONY: cutarelease
 cutarelease: versioncheck
 	[[ `git status | tail -n1` == "nothing to commit, working directory clean" ]]
-	./tools/cutarelease.py -p dashdash -f package.json
+	./tools/cutarelease.py -p cmdln -f lib/cmdln.py
+
+# Only have this around to retry package uploads on a tag created by
+# 'make cutarelease' because PyPI upload is super-flaky (at least for me).
+.PHONY: pypi-upload
+pypi-upload:
+	COPY_EXTENDED_ATTRIBUTES_DISABLE=1 python setup.py sdist --formats zip upload
