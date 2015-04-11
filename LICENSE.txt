@@ -1,4 +1,4 @@
-Copyright (c) 2012 Trent Mick
+Copyright (c) 2015 Trent Mick
 Copyright (c) 2002-2009 ActiveState Software Inc.
 
 Permission is hereby granted, free of charge, to any person obtaining a

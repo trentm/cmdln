@@ -2,6 +2,8 @@
 
 ## 1.3.0 (not yet released)
 
+(*LONG* hiatus from working on this module.)
+
 - Change `self.postoptparse()` hook handling to use the retval value. If it
   is none-zero (or non-None), then `Cmdln.main()` processing exits. This
   allows a Cmdln subclass to issue a starter command.

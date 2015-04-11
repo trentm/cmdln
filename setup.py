@@ -39,7 +39,7 @@ setup(
     version=cmdln.__version__,
     maintainer="Trent Mick",
     maintainer_email="trentm@gmail.com",
-    url="http://code.google.com/p/cmdln/",
+    url="http://github.com/trentm/cmdln",
     license="http://www.opensource.org/licenses/mit-license.php",
     platforms=["any"],
     py_modules=["cmdln"],
