@@ -2,7 +2,8 @@
 
 ## 1.3.1 (not yet released)
 
-(nothing yet)
+- [#30, first commit only] Allow dynamic setting of `self.prompt` and have it
+  update. By <https://github.com/hfeeki>.
 
 
 ## 1.3.0
