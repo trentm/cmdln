@@ -1,9 +1,8 @@
 # Why cmdln.py?
 
-`cmdln.py` fixes some of the design flaws in `cmd.py` and takes
-advantage of new Python stdlib modules (e.g. optparse) so that it is
-more useful (and convenient) for implementing command-line
-scripts/shells.
+`cmdln.py` fixes some of the design flaws in `cmd.py` and takes advantage of
+the `optparse` module so that it is more useful (and convenient) for
+implementing command-line scripts/shells.
 
 The main differences are:
 
@@ -24,6 +23,7 @@ The main differences are:
 
 Install notes and intro docs are below. Please send any feedback to
 [Trent Mick](mailto:trentm at google's mail thing).
+
 
 
 # Install
@@ -125,4 +125,12 @@ and (4) defining command aliases easy:
     'svn st' paths: ('foo', 'bar', 'baz')
 
 Read the [Getting Started docs](docs/getting_started.html) next.
+
+
+
+# Development
+
+Run the test suite via:
+
+    make test
 

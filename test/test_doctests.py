@@ -5,14 +5,14 @@
 """Run doctests in various files in this project."""
 
 import sys
-from os.path import dirname, abspath
+from os.path import dirname, abspath, join
 import unittest
 import doctest
 
 def suite():
     """Return a unittest.TestSuite to be used by test.py."""
     suite = unittest.TestSuite()
-    sys.path.insert(0, dirname(dirname(abspath(__file__))))
+    sys.path.insert(0, join(dirname(dirname(abspath(__file__))), 'lib'))
     import cmdln
     suite.addTest(doctest.DocTestSuite(cmdln))
     return suite
@@ -20,4 +20,3 @@ def suite():
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
     result = runner.run(suite())
-

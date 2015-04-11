@@ -5,14 +5,13 @@ r"""
     Usage:
         svn COMMAND [ARGS...]
         svn help [COMMAND]
-    <BLANKLINE>    
+    <BLANKLINE>
     Options:
         -h, --help  show this help message and exit
     <BLANKLINE>
     Commands:
-        help (?)          give detailed help on a specific sub-command
-        status (st, stat) 
-                          Print the status of working copy files and directories.
+        help (?)           give detailed help on a specific sub-command
+        status (st, stat)  Print the status of working copy files and directories.
     <BLANKLINE>
     Additional help topics (run `svn help TOPIC'):
         foo
@@ -22,14 +21,13 @@ r"""
     Usage:
         svn COMMAND [ARGS...]
         svn help [COMMAND]
-    <BLANKLINE>    
+    <BLANKLINE>
     Options:
         -h, --help  show this help message and exit
     <BLANKLINE>
     Commands:
-        help (?)          give detailed help on a specific sub-command
-        status (st, stat) 
-                          Print the status of working copy files and directories.
+        help (?)           give detailed help on a specific sub-command
+        status (st, stat)  Print the status of working copy files and directories.
     <BLANKLINE>
     Additional help topics (run `svn help TOPIC'):
         foo
@@ -77,7 +75,7 @@ class MySVN(cmdln.Cmdln):
     @cmdln.alias("stat", "st")
     @cmdln.option("--config-dir",
                   help="read user configuration files from directory ARG")
-    @cmdln.option("--non-interactive", action="store_true", 
+    @cmdln.option("--non-interactive", action="store_true",
                   help="do no interactive prompting")
     @cmdln.option("--no-auth-cache", action="store_true",
                   help="do not cache authentication tokens")
@@ -115,4 +113,3 @@ class MySVN(cmdln.Cmdln):
 if __name__ == "__main__":
     svn = MySVN()
     sys.exit(svn.main())
-

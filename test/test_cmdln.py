@@ -17,7 +17,7 @@ Usage:
 
     Test just specified cmdln_* files:
         python test_cmdln.py <file-pattern>...
-    
+
 """
 
 import sys
@@ -32,11 +32,13 @@ import glob
 PY3 = sys.version_info[0] == 3
 
 
+
+
 #---- support stuff
 
 def banner(text, ch='=', length=78):
     """Return a banner line centering the given text.
-    
+
         "text" is the text to show in the banner. None can be given to have
             no text.
         "ch" (optional, default '=') is the banner line character (can
@@ -118,16 +120,16 @@ class SpawnBlock:
             eol_expect = r"\r\n"
             eol_expect_repr = r"\\r\\n"
             eof_expect = r"\004" # Ctrl-D
-    
+
         for line in self.lines:
             if interactive and line.startswith(prompt):
                 expect.append(r"""expect {
     -i $spawn_id
     -re "^%s" {}
-    default { 
+    default {
         puts stderr {ERROR: expected "%s"}
         puts stderr "       got      \"$expect_out(buffer)\""
-        exit 1 
+        exit 1
     }
 }""" % (prompt, prompt))
                 input = line[len(prompt):]
@@ -149,12 +151,14 @@ class SpawnBlock:
                 expect.append(r"""expect {
     -i $spawn_id
     -re {^%s%s} {}
-    default { 
+    default {
         puts stderr {ERROR: expected "%s%s"}
         puts stderr "       got      \"$expect_out(buffer)\""
-        exit 1 
+        exit 1
     }
-}""" % (expected, eol_expect, expected.replace('\\', '\\\\'),
+}""" % (expected,
+        eol_expect,
+        expected.replace('\\', ''),
         eol_expect_repr))
 
         # Trap EOF for current process and make sure there isn't
@@ -165,9 +169,9 @@ class SpawnBlock:
     } -re "^.+$" {
         puts stderr "error: unexpected trailing output: '$expect_out(buffer)'\n"
         exit 1
-    } timeout { 
+    } timeout {
         puts stderr {ERROR: timed out waiting for EOF from '%s'}
-        exit 1 
+        exit 1
     }
 }""" % self.cmd)
 
@@ -243,12 +247,12 @@ def generate_expect(content):
               "",
               "package require Expect",
               "set timeout 3",
-              "set send_slow {10 .001}", 
+              "set send_slow {10 .001}",
               ""]
     for block in blocks:
         expect.append(block.generate())
     return '\n'.join(expect) + '\n'
-    
+
 
 #----- test cases
 
@@ -311,6 +315,8 @@ else:
     if sys.version_info[:2] >= (2,4):
         testfiles += glob.glob("cmdln24_*.py")
 for fname in testfiles:
+    if not fname.endswith('.py'):
+        continue
     base = os.path.basename(os.path.splitext(fname)[0])
     testfunc = lambda self, base=base, fname=fname: _testOneCmdln(self, base, fname)
     if base.startswith("cmdln_"):
@@ -328,5 +334,5 @@ def suite():
 
 if __name__ == "__main__":
     runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
-    result = runner.run(suite())
-
+    s = suite()
+    result = runner.run(s)

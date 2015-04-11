@@ -28,4 +28,3 @@ if __name__ == "__main__":
         testdir_from_ns={None: dirname(abspath(__file__))},
         setup_func=setup)
     sys.exit(retval)
-
