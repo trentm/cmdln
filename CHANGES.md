@@ -1,8 +1,8 @@
 # cmdln Changelog
 
-## 1.3.2 (not yet released)
+## 2.0.0 (not yet released)
 
-(nothing yet)
+(Start working on Python 3 support.)
 
 
 ## 1.3.1
