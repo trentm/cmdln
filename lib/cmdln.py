@@ -766,8 +766,8 @@ class RawCmdln(cmd.Cmd):
 
         # Extract the introspection bits we need.
         func = handler.__func__
-        if func.func_defaults:
-            func_defaults = list(func.func_defaults)
+        if func.__defaults__:
+            func_defaults = list(func.__defaults__)
         else:
             func_defaults = []
         co_argcount = func.__code__.co_argcount
