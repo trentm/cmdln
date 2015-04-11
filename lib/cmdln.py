@@ -4,6 +4,7 @@
 # License: MIT (see LICENSE.txt for license details)
 # Author:  Trent Mick
 
+
 """An improvement on Python's standard cmd.py module.
 
 As with cmd.py, this module provides "a simple framework for writing
@@ -35,8 +36,11 @@ See the README.txt or <http://trentm.com/projects/cmdln/> for more
 details.
 """
 
+from __future__ import print_function
+
 __version_info__ = (2, 0, 0)
 __version__ = '.'.join(map(str, __version_info__))
+
 
 import os
 import sys
@@ -236,13 +240,13 @@ class RawCmdln(cmd.Cmd):
         if self.optparser: # i.e. optparser=None means don't process for opts
             try:
                 self.options, args = self.optparser.parse_args(argv[1:])
-            except CmdlnUserError, ex:
+            except CmdlnUserError as ex:
                 msg = "%s: %s\nTry '%s help' for info.\n"\
                       % (self.name, ex, self.name)
                 self.stderr.write(self._str(msg))
                 self.stderr.flush()
                 return 1
-            except StopOptionProcessing, ex:
+            except StopOptionProcessing as ex:
                 return 0
         else:
             self.options, args = None, argv[1:]
@@ -1122,7 +1126,7 @@ class Cmdln(RawCmdln):
 
             try:
                 return handler(argv[0], opts, *args)
-            except TypeError, ex:
+            except TypeError as ex:
                 # Some TypeError's are user errors:
                 #   do_foo() takes at least 4 arguments (3 given)
                 #   do_foo() takes at most 5 arguments (6 given)
@@ -1493,8 +1497,8 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
     """
     DEBUG = False
     if DEBUG:
-        print "dedent: dedent(..., tabsize=%d, skip_first_line=%r)"\
-              % (tabsize, skip_first_line)
+        print("dedent: dedent(..., tabsize=%d, skip_first_line=%r)"\
+              % (tabsize, skip_first_line))
     indents = []
     margin = None
     for i, line in enumerate(lines):
@@ -1511,12 +1515,12 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
                 break
         else:
             continue # skip all-whitespace lines
-        if DEBUG: print "dedent: indent=%d: %r" % (indent, line)
+        if DEBUG: print("dedent: indent=%d: %r" % (indent, line))
         if margin is None:
             margin = indent
         else:
             margin = min(margin, indent)
-    if DEBUG: print "dedent: margin=%r" % margin
+    if DEBUG: print("dedent: margin=%r" % margin)
 
     if margin is not None and margin > 0:
         for i, line in enumerate(lines):
@@ -1528,7 +1532,7 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
                 elif ch == '\t':
                     removed += tabsize - (removed % tabsize)
                 elif ch in '\r\n':
-                    if DEBUG: print "dedent: %r: EOL -> strip up to EOL" % line
+                    if DEBUG: print("dedent: %r: EOL -> strip up to EOL" % line)
                     lines[i] = lines[i][j:]
                     break
                 else:
@@ -1536,8 +1540,8 @@ def _dedentlines(lines, tabsize=8, skip_first_line=False):
                                      "line %r while removing %d-space margin"
                                      % (ch, line, margin))
                 if DEBUG:
-                    print "dedent: %r: %r -> removed %d/%d"\
-                          % (line, ch, removed, margin)
+                    print("dedent: %r: %r -> removed %d/%d"\
+                          % (line, ch, removed, margin))
                 if removed == margin:
                     lines[i] = lines[i][j+1:]
                     break
@@ -1650,7 +1654,7 @@ if __name__ == "__main__" and len(sys.argv) == 6:
 
         try:
             script = _module_from_path(script_path)
-        except ImportError, ex:
+        except ImportError as ex:
             _log("error importing `%s': %s" % (script_path, ex))
             return []
         shell = getattr(script, class_name)()
@@ -1699,4 +1703,4 @@ if __name__ == "__main__" and len(sys.argv) == 6:
         return []
 
     for cpln in _get_bash_cplns(*sys.argv[1:]):
-        print cpln
+        print(cpln)
