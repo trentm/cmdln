@@ -15,12 +15,7 @@ test:
 
 # TODO: add python 3.3 and 3.4 testing
 .PHONY: testall
-testall: test25 test26 test27
-.PHONY: test25
-test25:
-	@echo "# Test with python 2.5"
-	@python2.5 --version
-	make test PYTHON=python2.5
+testall: test26 test27 test33 test34
 .PHONY: test26
 test26:
 	@echo "# Test with python 2.6"
