@@ -35,7 +35,7 @@ See the README.txt or <http://trentm.com/projects/cmdln/> for more
 details.
 """
 
-__version_info__ = (1, 3, 1)
+__version_info__ = (1, 3, 2)
 __version__ = '.'.join(map(str, __version_info__))
 
 import os
