@@ -13,9 +13,9 @@ test:
 	$(PYTHON) test/test_doctests.py
 	(cd test && $(PYTHON) test.py)
 
-# TODO: add python 3.4
+# TODO: add python 3.3 and 3.4 testing
 .PHONY: testall
-testall: test25 test26 test27 test33
+testall: test25 test26 test27
 .PHONY: test25
 test25:
 	@echo "# Test with python 2.5"

@@ -25,6 +25,11 @@ Install notes and intro docs are below. Please send any feedback to
 [Trent Mick](mailto:trentm at google's mail thing).
 
 
+# Python Versions
+
+This currently supports Python 2.5, 2.6 and 2.7.
+Working on 3.x support for cmdln 2.x.
+
 
 # Install
 
