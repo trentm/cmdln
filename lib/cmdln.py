@@ -1386,7 +1386,7 @@ def line2argv(line):
     ...     line2argv(r'\\foo\\bar') == ['\\foo\\bar']
     ...     try:
     ...         line2argv('"foo')
-    ...     except ValueError, ex:
+    ...     except ValueError as ex:
     ...         "not terminated" in str(ex)
     True
     True
