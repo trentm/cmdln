@@ -645,14 +645,12 @@ class RawCmdln(cmd.Cmd):
 
         # Get the list of (non-hidden) commands and their
         # documentation, if any.
-        cmdnames = {} # use a dict to strip duplicates
+        cmdnames = set()
         for attr in self.get_names():
             if attr.startswith("do_"):
-                cmdnames[attr[3:]] = True
-        cmdnames = cmdnames.keys()
-        cmdnames.sort()
+                cmdnames.add(attr[3:])
         linedata = []
-        for cmdname in cmdnames:
+        for cmdname in sorted(cmdnames):
             if aliases.get(cmdname):
                 a = aliases[cmdname]
                 a.sort()
