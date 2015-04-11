@@ -1,7 +1,7 @@
 # Why cmdln.py?
 
-`cmdln.py` fixes some of the design flaws in `cmd.py` and takes advantage of
-the `optparse` module so that it is more useful (and convenient) for
+`cmdln.py` fixes some of the design flaws in `cmd.py` and uses the 
+`optparse` module so that it is more useful (and convenient) for
 implementing command-line scripts/shells.
 
 The main differences are:
