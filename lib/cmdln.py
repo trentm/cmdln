@@ -1460,9 +1460,9 @@ def argv2line(argv):
     'foo "bar baz"'
     >>> argv2line(['foo"bar'])
     'foo"bar'
-    >>> print argv2line(['foo" bar'])
+    >>> print(argv2line(['foo" bar']))
     'foo" bar'
-    >>> print argv2line(["foo' bar"])
+    >>> print(argv2line(["foo' bar"]))
     "foo' bar"
     >>> argv2line(["foo'bar"])
     "foo'bar"
