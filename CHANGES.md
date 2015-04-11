@@ -1,6 +1,6 @@
 # cmdln Changelog
 
-## 1.3.1 (not yet released)
+## 1.3.1
 
 - [#30, first commit only] Allow dynamic setting of `self.prompt` and have it
   update. By <https://github.com/hfeeki>.
