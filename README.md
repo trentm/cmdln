@@ -27,8 +27,11 @@ Install notes and intro docs are below. Please send any feedback to
 
 # Python Versions
 
-This currently supports Python 2.5, 2.6 and 2.7.
-Working on 3.x support for cmdln 2.x.
+cmdln 1.x versions support Python 2.5, 2.6 and 2.7.
+
+The #master branch is currently working on supporting 3.x. The best
+current notes are on [pull #32](https://github.com/trentm/cmdln/pull/32). Help
+appreciated.
 
 
 # Install
