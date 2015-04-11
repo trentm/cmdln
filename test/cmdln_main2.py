@@ -21,4 +21,3 @@ if __name__ == "__main__":
     shell = Shell()
     retval = shell.cmd(sys.argv[1:]) # just run one command
     sys.exit(retval)
-

@@ -21,4 +21,3 @@ if __name__ == "__main__":
     shell = Shell()
     retval = shell.main(loop=cmdln.LOOP_NEVER) # don't want a command loop
     sys.exit(retval)
-

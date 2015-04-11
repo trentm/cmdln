@@ -19,10 +19,10 @@
     Usage:
         cmdln24_aliases_deco.py COMMAND [ARGS...]
         cmdln24_aliases_deco.py help [COMMAND]
-    <BLANKLINE>    
+    <BLANKLINE>
     Options:
         -h, --help  show this help message and exit
-    <BLANKLINE>    
+    <BLANKLINE>
     Commands:
         bar (b, ba)    whopee!
         foo (!, f)     shazam!
@@ -49,4 +49,3 @@ if __name__ == "__main__":
     shell = Shell()
     retval = shell.main(loop=cmdln.LOOP_NEVER) # don't want a command loop
     sys.exit(retval)
-

@@ -4,6 +4,10 @@ PYTHON ?= python
 
 all:
 
+.PHONY: clean
+clean:
+	rm -f lib/*.pyc test/*.pyc
+
 .PHONY: test
 test:
 	$(PYTHON) test/test_doctests.py

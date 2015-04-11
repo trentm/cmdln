@@ -21,4 +21,3 @@ class Shell(cmdln.RawCmdln):
 
 if __name__ == "__main__":
     sys.exit( Shell().main(loop=cmdln.LOOP_IF_EMPTY) )
-

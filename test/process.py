@@ -47,7 +47,7 @@ r"""
                             <parent process>
                ,---->->->------'   ^   `------>->->----,
                |                   |                   v
-           IOBuffer             IOBuffer            IOBuffer        
+           IOBuffer             IOBuffer            IOBuffer
            (p.stdout)           (p.stderr)          (p.stdin)
                |                   |                   |
            _OutFileProxy        _OutFileProxy       _InFileProxy
@@ -137,7 +137,7 @@ import os
 import sys
 import threading
 import types
-import pprint 
+import pprint
 import errno
 import logging
 
@@ -247,7 +247,7 @@ def _getPathFromEnv(env):
 
 def _readRetryOnEINTR(fd, buffersize):
     """Like os.read, but retries on EINTR.
-    
+
     From 'man 2 read':
         [EINTR]     A read from a slow device was interrupted before any
                     data arrived by the delivery of a signal.
@@ -264,7 +264,7 @@ def _readRetryOnEINTR(fd, buffersize):
 
 def _writeRetryOnEINTR(fd, s):
     """Like os.write, but retries on EINTR.
-    
+
     From 'man 2 write':
         [EINTR]     A signal interrupted the write before it could
                     be completed.
@@ -280,7 +280,7 @@ def _writeRetryOnEINTR(fd, s):
                 continue
             else:
                 raise
-    
+
 def _waitpidRetryOnEINTR(pid, options):
     """Like os.waitpid, but retries on EINTR
 
@@ -346,17 +346,17 @@ def _whichFirstArg(cmd, env=None):
 
 if sys.platform.startswith("win"):
     def _SaferCreateProcess(appName,        # app name
-                            cmd,            # command line 
-                            processSA,      # process security attributes 
-                            threadSA,       # thread security attributes 
+                            cmd,            # command line
+                            processSA,      # process security attributes
+                            threadSA,       # thread security attributes
                             inheritHandles, # are handles are inherited
-                            creationFlags,  # creation flags 
+                            creationFlags,  # creation flags
                             env,            # environment
                             cwd,            # current working directory
                             si):            # STARTUPINFO pointer
         """If CreateProcess fails from environment type inconsistency then
         fix that and try again.
-        
+
         win32process.CreateProcess requires that all environment keys and
         values either be all ASCII or all unicode. Try to remove this burden
         from the user of process.py.
@@ -377,7 +377,7 @@ if sys.platform.startswith("win"):
             for key, value in env.items():
                 aenv[str(key)] = str(value)
             env = aenv
-        
+
         log.debug("""\
 _SaferCreateProcess(appName=%r,
                     cmd=%r,
@@ -456,7 +456,7 @@ def _registerProcess(process):
                 pass
             else:
                 raise
-        
+
     _processes.append(process)
 
 def _unregisterProcess(process):
@@ -564,7 +564,7 @@ def _fixupCommand(cmd, env=None):
 
 class _FileWrapper:
     """Wrap a system file object, hiding some nitpicky details.
-    
+
     This class provides a Python file-like interface to either a Python
     file object (pretty easy job), a file descriptor, or an OS-specific
     file handle (e.g.  Win32 handles to file objects on Windows). Any or
@@ -680,7 +680,7 @@ class _FileWrapper:
             return text
         elif self._file is not None:
             return self._file.read(nBytes)
-        else:   
+        else:
             raise "FileHandle.read: no handle to read with"
 
     def readline(self):
@@ -747,7 +747,7 @@ class _FileWrapper:
                          id(self), len(text), text)
         elif self._file is not None:
             self._file.write(text)
-        else:   
+        else:
             raise "FileHandle.write: nothing to write with"
 
     def close(self):
@@ -933,7 +933,7 @@ class Process:
         else:
             cmd = self._cmd
 
-        si = win32process.STARTUPINFO() 
+        si = win32process.STARTUPINFO()
         si.dwFlags = win32process.STARTF_USESHOWWINDOW
         si.wShowWindow = SW_SHOWDEFAULT
 
@@ -957,14 +957,14 @@ class Process:
             self._hProcess, self._hThread, self._processId, self._threadId\
                 = _SaferCreateProcess(
                     None,           # app name
-                    cmd,            # command line 
-                    None,           # process security attributes 
-                    None,           # primary thread security attributes 
-                    0,              # handles are inherited 
-                    self._flags,    # creation flags 
+                    cmd,            # command line
+                    None,           # process security attributes
+                    None,           # primary thread security attributes
+                    0,              # handles are inherited
+                    self._flags,    # creation flags
                     self._env,      # environment
                     self._cwd,      # current working directory
-                    si)             # STARTUPINFO pointer 
+                    si)             # STARTUPINFO pointer
             win32api.CloseHandle(self._hThread)
         except win32api.error:
             _, ex, _ = sys.exc_info()
@@ -972,9 +972,9 @@ class Process:
                                    % (cmd, ex.args[2]),
                                errno=ex.args[0])
 
-    def wait(self, timeout=None): 
+    def wait(self, timeout=None):
         """Wait for the started process to complete.
-        
+
         "timeout" (on Windows) is a floating point number of seconds after
             which to timeout.  Default is win32event.INFINITE.
         "timeout" (on Unix) is akin to the os.waitpid() "options" argument
@@ -1034,7 +1034,7 @@ class Process:
 
     def kill(self, exitCode=0, gracePeriod=1.0, sig=None):
         """Kill process.
-        
+
         "exitCode" [deprecated, not supported] (Windows only) is the
             code the terminated process should exit with.
         "gracePeriod" (Windows only) is a number of seconds the process is
@@ -1070,7 +1070,7 @@ class Process:
                     #   api_error: (6, 'GenerateConsoleCtrlEvent', 'The handle is invalid.')
                     # Get error 6 if there is no console.
                     raise
-            
+
             # Last resort: call TerminateProcess if it has not yet.
             retval = 0
             try:
@@ -1160,7 +1160,7 @@ class ProcessOpen(Process):
             self.__log.info("[%s] ProcessOpen.close()" % id(self))
 
             # Ensure that all IOBuffer's are closed. If they are not, these
-            # can cause hangs. 
+            # can cause hangs.
             try:
                 self.__log.info("[%s] ProcessOpen: closing stdin (%r)."\
                                 % (id(self), self.stdin))
@@ -1248,13 +1248,13 @@ class ProcessOpen(Process):
         saAttr.bInheritHandle = 1
         #XXX Should maybe try with os.pipe. Dunno what that does for
         #    inheritability though.
-        hChildStdinRd, hChildStdinWr = win32pipe.CreatePipe(saAttr, 0) 
-        hChildStdoutRd, hChildStdoutWr = win32pipe.CreatePipe(saAttr, 0) 
-        hChildStderrRd, hChildStderrWr = win32pipe.CreatePipe(saAttr, 0) 
+        hChildStdinRd, hChildStdinWr = win32pipe.CreatePipe(saAttr, 0)
+        hChildStdoutRd, hChildStdoutWr = win32pipe.CreatePipe(saAttr, 0)
+        hChildStderrRd, hChildStderrWr = win32pipe.CreatePipe(saAttr, 0)
 
         try:
             # Duplicate the parent ends of the pipes so they are not
-            # inherited. 
+            # inherited.
             hChildStdinWrDup = win32api.DuplicateHandle(
                 win32api.GetCurrentProcess(),
                 hChildStdinWr,
@@ -1306,7 +1306,7 @@ class ProcessOpen(Process):
                         id(self), self.stderr)
 
             # Start the child process.
-            si = win32process.STARTUPINFO() 
+            si = win32process.STARTUPINFO()
             si.dwFlags = win32process.STARTF_USESHOWWINDOW
             si.wShowWindow = 0 # SW_HIDE
             si.hStdInput = hChildStdinRd
@@ -1321,14 +1321,14 @@ class ProcessOpen(Process):
                 self._hProcess, hThread, self._processId, threadId\
                     = _SaferCreateProcess(
                         None,           # app name
-                        cmd,            # command line 
-                        None,           # process security attributes 
-                        None,           # primary thread security attributes 
-                        1,              # handles are inherited 
-                        creationFlags,  # creation flags 
+                        cmd,            # command line
+                        None,           # process security attributes
+                        None,           # primary thread security attributes
+                        1,              # handles are inherited
+                        creationFlags,  # creation flags
                         self._env,      # environment
                         self._cwd,      # current working directory
-                        si)             # STARTUPINFO pointer 
+                        si)             # STARTUPINFO pointer
             except win32api.error:
                 _, ex, _ = sys.exc_info()
                 raise ProcessError(msg=ex.args[2], errno=ex.args[0])
@@ -1341,9 +1341,9 @@ class ProcessOpen(Process):
             win32file.CloseHandle(hChildStdoutWr)
             win32file.CloseHandle(hChildStderrWr)
 
-    def wait(self, timeout=None): 
+    def wait(self, timeout=None):
         """Wait for the started process to complete.
-        
+
         "timeout" (on Windows) is a floating point number of seconds after
             which to timeout.  Default is win32event.INFINITE.
         "timeout" (on Unix) is akin to the os.waitpid() "options" argument
@@ -1408,7 +1408,7 @@ class ProcessOpen(Process):
 
     def kill(self, exitCode=0, gracePeriod=1.0, sig=None):
         """Kill process.
-        
+
         "exitCode" [deprecated, not supported] (Windows only) is the
             code the terminated process should exit with.
         "gracePeriod" (Windows only) is a number of seconds the process is
@@ -1444,7 +1444,7 @@ class ProcessOpen(Process):
                     #   api_error: (6, 'GenerateConsoleCtrlEvent', 'The handle is invalid.')
                     # Get error 6 if there is no console.
                     raise
-            
+
             # Last resort: call TerminateProcess if it has not yet.
             retval = 0
             try:
@@ -1563,7 +1563,7 @@ class ProcessProxy(Process):
             self.__log.info("[%s] ProcessProxy.close()" % id(self))
 
             # Ensure that all IOBuffer's are closed. If they are not, these
-            # can cause hangs. 
+            # can cause hangs.
             self.__log.info("[%s] ProcessProxy: closing stdin (%r)."\
                             % (id(self), self.stdin))
             try:
@@ -1668,7 +1668,7 @@ class ProcessProxy(Process):
         # this pipe, with compromises. See the discussion at the top of
         # this module.)
         closer = _CountingCloser([self.stdin, childStdin, self], 2)
-        self._stdoutProxy = _OutFileProxy(childStdout, self.stdout, 
+        self._stdoutProxy = _OutFileProxy(childStdout, self.stdout,
                                           [closer],
                                           name='<stdout>')
         self._stdoutProxy.start()
@@ -1690,13 +1690,13 @@ class ProcessProxy(Process):
         saAttr.bInheritHandle = 1
         #XXX Should maybe try with os.pipe. Dunno what that does for
         #    inheritability though.
-        hChildStdinRd, hChildStdinWr = win32pipe.CreatePipe(saAttr, 0) 
-        hChildStdoutRd, hChildStdoutWr = win32pipe.CreatePipe(saAttr, 0) 
-        hChildStderrRd, hChildStderrWr = win32pipe.CreatePipe(saAttr, 0) 
+        hChildStdinRd, hChildStdinWr = win32pipe.CreatePipe(saAttr, 0)
+        hChildStdoutRd, hChildStdoutWr = win32pipe.CreatePipe(saAttr, 0)
+        hChildStderrRd, hChildStderrWr = win32pipe.CreatePipe(saAttr, 0)
 
         try:
             # Duplicate the parent ends of the pipes so they are not
-            # inherited. 
+            # inherited.
             hChildStdinWrDup = win32api.DuplicateHandle(
                 win32api.GetCurrentProcess(),
                 hChildStdinWr,
@@ -1750,7 +1750,7 @@ class ProcessProxy(Process):
                         id(self), childStderr)
 
             # Start the child process.
-            si = win32process.STARTUPINFO() 
+            si = win32process.STARTUPINFO()
             si.dwFlags = win32process.STARTF_USESHOWWINDOW
             si.wShowWindow = 0 # SW_HIDE
             si.hStdInput = hChildStdinRd
@@ -1766,14 +1766,14 @@ class ProcessProxy(Process):
                 self._hProcess, hThread, self._processId, threadId\
                     = _SaferCreateProcess(
                         None,           # app name
-                        cmd,            # command line 
-                        None,           # process security attributes 
-                        None,           # primary thread security attributes 
-                        1,              # handles are inherited 
-                        creationFlags,  # creation flags 
+                        cmd,            # command line
+                        None,           # process security attributes
+                        None,           # primary thread security attributes
+                        1,              # handles are inherited
+                        creationFlags,  # creation flags
                         self._env,      # environment
                         self._cwd,      # current working directory
-                        si)             # STARTUPINFO pointer 
+                        si)             # STARTUPINFO pointer
             except win32api.error:
                 _, ex, _ = sys.exc_info()
                 raise ProcessError(msg=ex.args[2], errno=ex.args[0])
@@ -1793,7 +1793,7 @@ class ProcessProxy(Process):
         # the child has closed its side of <stdout>. (This is one way of
         # determining when it is appropriate to clean up this pipe, with
         # compromises. See the discussion at the top of this module.)
-        self._stdoutProxy = _OutFileProxy(childStdout, self.stdout, 
+        self._stdoutProxy = _OutFileProxy(childStdout, self.stdout,
                                           [self.stdin, childStdin, self],
                                           name='<stdout>')
         self._stdoutProxy.start()
@@ -1801,9 +1801,9 @@ class ProcessProxy(Process):
                                           name='<stderr>')
         self._stderrProxy.start()
 
-    def wait(self, timeout=None): 
+    def wait(self, timeout=None):
         """Wait for the started process to complete.
-        
+
         "timeout" (on Windows) is a floating point number of seconds after
             which to timeout.  Default is win32event.INFINITE.
         "timeout" (on Unix) is akin to the os.waitpid() "options" argument
@@ -1864,7 +1864,7 @@ class ProcessProxy(Process):
 
     def kill(self, exitCode=0, gracePeriod=1.0, sig=None):
         """Kill process.
-        
+
         "exitCode" [deprecated, not supported] (Windows only) is the
             code the terminated process should exit with.
         "gracePeriod" (Windows only) is a number of seconds the process is
@@ -1900,7 +1900,7 @@ class ProcessProxy(Process):
                     #   api_error: (6, 'GenerateConsoleCtrlEvent', 'The handle is invalid.')
                     # Get error 6 if there is no console.
                     raise
-            
+
             # Last resort: call TerminateProcess if it has not yet.
             retval = 0
             try:
@@ -2063,7 +2063,7 @@ class IOBuffer:
         else:
             idx += 1 # include the '\n'
         if n is not None:
-            idx = min(idx, n) 
+            idx = min(idx, n)
         retval, self.__buf = self.__buf[:idx], self.__buf[idx:]
         return retval
 
@@ -2369,8 +2369,8 @@ if sys.platform.startswith("linux"):
             self.__hasTerminated.release()
 
             self.__waiter = None # drop ref that would keep instance alive
-        
-        def wait(self, timeout=None): 
+
+        def wait(self, timeout=None):
             # If the process __hasTerminated then return the exit
             # status. Otherwise simulate the wait as appropriate.
             # Note:
@@ -2407,5 +2407,3 @@ if sys.platform.startswith("linux"):
     _ThreadBrokenProcessProxy = ProcessProxy
     class ProcessProxy(_ThreadFixer, _ThreadBrokenProcessProxy):
         _pclass = _ThreadBrokenProcessProxy
-
-

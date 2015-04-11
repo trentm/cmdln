@@ -48,4 +48,3 @@ class HelpShell(cmdln.RawCmdln):
 
 if __name__ == "__main__":
     sys.exit(HelpShell().main(loop=cmdln.LOOP_IF_EMPTY))
-

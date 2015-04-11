@@ -24,4 +24,3 @@ class HelloWorld(cmdln.RawCmdln):
 
 if __name__ == "__main__":
     sys.exit(HelloWorld().main(loop=cmdln.LOOP_IF_EMPTY))
-

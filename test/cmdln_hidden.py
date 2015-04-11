@@ -4,7 +4,7 @@
     Hidden commands are those whose handler begins with "_do_" instead
     of the usual "do_". These do not show up in the default help output
     and in readline completion lists.
-    
+
     $ python cmdln_hidden.py visible
     hi from visible command
     $ python cmdln_hidden.py hidden
@@ -33,4 +33,3 @@ class Shell(cmdln.RawCmdln):
 
 if __name__ == "__main__":
     sys.exit( Shell().main(loop=cmdln.LOOP_IF_EMPTY) )
-

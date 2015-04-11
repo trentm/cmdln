@@ -54,7 +54,7 @@ class Shell(cmdln.Cmdln):
                 return
             else:
                 return ex.code
-                
+
             print dir(ex)
             print "ARGS:", ex.args
             print "CODE:", ex.code
@@ -64,11 +64,11 @@ class Shell(cmdln.Cmdln):
         if len(args) != 0:
             raise Error("incorrect number of arguments: %r\n"
                         "Try `foo help %s'." % (args, argv[0]))
-    
+
 
 def main(argv):
     log.setLevel(logging.INFO)
-    
+
 ##    # Process command line.
 ##    try:
 ##        optlist, args = getopt.getopt(argv[1:], "hVvq",
@@ -135,6 +135,3 @@ if __name__ == "__main__":
         sys.exit(1)
     else:
         sys.exit(retval)
-
-
-
