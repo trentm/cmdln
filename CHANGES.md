@@ -1,6 +1,6 @@
 # cmdln Changelog
 
-## 1.3.0 (not yet released)
+## 1.3.0
 
 (*LONG* hiatus from working on this module.)
 
