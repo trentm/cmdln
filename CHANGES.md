@@ -1,6 +1,6 @@
 # cmdln Changelog
 
-## 2.0.0 (not yet released)
+## 2.0.0
 
 Added support for Python 3 (test suite fully passing). Thanks
 Stuart Axon (https://github.com/stuaxo) for some of this work!
