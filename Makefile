@@ -6,7 +6,8 @@ all:
 
 .PHONY: clean
 clean:
-	rm -rf dist build MANIFEST {.,docs,lib,examples,test}/*.pyc
+	rm -rf dist build MANIFEST {.,docs,lib,examples,test}/*.pyc \
+	    test/.cmdln*.exp.tmp
 
 .PHONY: test
 test:

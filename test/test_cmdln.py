@@ -29,7 +29,7 @@ import shutil
 import glob
 
 
-PY3 = sys.version_info[0] == 3
+PY3 = (sys.version_info[0] >= 3)
 
 
 
@@ -278,16 +278,11 @@ def _testOneCmdln(self, modname, fname):
         if _debug:
             tmpfname = ".%s.exp.tmp" % modname
             open(tmpfname, 'w').write(expect)
-        import process
-        p = process.ProcessOpen("tclsh")
-        p.stdin.write(expect)
-        p.stdin.close()
-        retval = p.wait()
-        if hasattr(os, "WEXITSTATUS"):
-            retval = os.WEXITSTATUS(retval)
-        stdout = p.stdout.read()
-        stderr = p.stderr.read()
-        p.close()
+        import subprocess
+        p = subprocess.Popen(["tclsh"], stdin=subprocess.PIPE,
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        stdout, stderr = p.communicate(expect)
+        retval = p.returncode
     self.failIf(retval, """\
 '%s' did not behave as expected:
 %s
