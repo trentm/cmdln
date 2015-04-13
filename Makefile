@@ -11,8 +11,8 @@ clean:
 
 .PHONY: test
 test:
-	$(PYTHON) test/test_doctests.py
-	(cd test && $(PYTHON) test.py)
+	@[[ -n "$(TEST_FILTERS)" ]] || $(PYTHON) test/test_doctests.py
+	@(cd test && $(PYTHON) test.py $(TEST_FILTERS))
 
 # TODO: add python 3.3 and 3.4 testing
 .PHONY: testall

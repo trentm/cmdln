@@ -27,11 +27,9 @@ Install notes and intro docs are below. Please send any feedback to
 
 # Python Versions
 
-cmdln 1.x versions support Python 2.5, 2.6 and 2.7.
+cmdln 2.x versions support Python 2.6, 2.7, 3.3 and 3.4.
 
-The #master branch is currently working on supporting 3.x. The best
-current notes are on [pull #32](https://github.com/trentm/cmdln/pull/32). Help
-appreciated.
+cmdln 1.x versions support Python 2.5, 2.6 and 2.7.
 
 
 # Install
@@ -139,7 +137,15 @@ Read the [Getting Started docs](docs/getting_started.rst) next.
 
 # Development
 
-Run the test suite via:
+Run the test suite on your current `python` version:
 
     make test
+
+To attempt to run with all supported versions:
+
+    make testall
+
+On a particular version:
+
+    make test34
 

@@ -60,6 +60,10 @@ LOOP_ALWAYS, LOOP_NEVER, LOOP_IF_EMPTY = range(3)
 # An unspecified optional argument when None is a meaningful value.
 _NOT_SPECIFIED = ("Not", "Specified")
 
+PY3 = (sys.version_info[0] >= 3)
+if not PY3:
+    input = raw_input
+
 
 
 #---- exceptions
@@ -336,7 +340,7 @@ class RawCmdln(cmd.Cmd):
                 else:
                     if self.use_rawinput:
                         try:
-                            line = raw_input(self._str(self.prompt))
+                            line = input(self._str(self.prompt))
                         except EOFError:
                             line = 'EOF'
                         except KeyboardInterrupt:

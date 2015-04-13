@@ -25,6 +25,7 @@ import os
 import unittest
 import difflib
 import pprint
+import subprocess
 import shutil
 import glob
 
@@ -60,7 +61,7 @@ def banner(text, ch='=', length=78):
         return text
     else:
         remain = length - (len(text) + 2)
-        prefix_len = remain / 2
+        prefix_len = remain // 2
         suffix_len = remain - prefix_len
         if len(ch) == 1:
             prefix = ch * prefix_len
@@ -108,7 +109,10 @@ class SpawnBlock:
 
     def generate(self):
         """Return executable "expect" code for this spawn-block."""
-        expect = ["spawn "+self.cmd]
+        # If the python we are running with isn't "python", then update `cmd`
+        # accordingly (they all call Python as "python").
+        pythonExeName = os.path.basename(sys.executable)
+        expect = ["spawn " + self.cmd.replace("python", pythonExeName, 1)]
         interactive = self.options.get("INTERACTIVE", False)
         if interactive:
             prompt = self.options["PROMPT"]
@@ -278,9 +282,9 @@ def _testOneCmdln(self, modname, fname):
         if _debug:
             tmpfname = ".%s.exp.tmp" % modname
             open(tmpfname, 'w').write(expect)
-        import subprocess
         p = subprocess.Popen(["tclsh"], stdin=subprocess.PIPE,
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+            universal_newlines=True)
         stdout, stderr = p.communicate(expect)
         retval = p.returncode
     self.failIf(retval, """\
