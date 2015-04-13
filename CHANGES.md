@@ -1,5 +1,10 @@
 # cmdln Changelog
 
+## 2.0.1 (not yet released)
+
+(nothing yet)
+
+
 ## 2.0.0
 
 Added support for Python 3 (test suite fully passing). Thanks
