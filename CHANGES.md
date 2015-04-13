@@ -2,12 +2,8 @@
 
 ## 2.0.0 (not yet released)
 
-(Start working on Python 3 support.)
-
-Current status: Likely working though the test suite *hangs* on Python 3,
-e.g. `make test34`. :(  See details at
-<https://github.com/trentm/cmdln/pull/32#issuecomment-91767116>. Help there
-would be greatly appreciated.
+Added support for Python 3 (test suite fully passing). Thanks
+Stuart Axon (https://github.com/stuaxo) for some of this work!
 
 
 ## 1.3.1
