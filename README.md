@@ -133,7 +133,7 @@ and (4) defining command aliases easy:
     'svn st' opts:  {'show_updates': None, 'verbose': True}
     'svn st' paths: ('foo', 'bar', 'baz')
 
-Read the [Getting Started docs](docs/getting_started.html) next.
+Read the [Getting Started docs](docs/getting_started.rst) next.
 
 
 
