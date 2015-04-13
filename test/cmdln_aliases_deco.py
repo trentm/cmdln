@@ -1,24 +1,24 @@
 #!/usr/bin/env python
 
 """
-    $ python cmdln24_aliases_deco.py foo
+    $ python cmdln_aliases_deco.py foo
     hello from foo
-    $ python cmdln24_aliases_deco.py f
+    $ python cmdln_aliases_deco.py f
     hello from foo
-    $ python cmdln24_aliases_deco.py !
+    $ python cmdln_aliases_deco.py !
     hello from foo
 
-    $ python cmdln24_aliases_deco.py bar
+    $ python cmdln_aliases_deco.py bar
     hello from bar
-    $ python cmdln24_aliases_deco.py ba
+    $ python cmdln_aliases_deco.py ba
     hello from bar
-    $ python cmdln24_aliases_deco.py b
+    $ python cmdln_aliases_deco.py b
     hello from bar
 
-    $ python cmdln24_aliases_deco.py help
+    $ python cmdln_aliases_deco.py help
     Usage:
-        cmdln24_aliases_deco.py COMMAND [ARGS...]
-        cmdln24_aliases_deco.py help [COMMAND]
+        cmdln_aliases_deco.py COMMAND [ARGS...]
+        cmdln_aliases_deco.py help [COMMAND]
     <BLANKLINE>
     Options:
         -h, --help  show this help message and exit

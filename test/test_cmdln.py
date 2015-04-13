@@ -312,8 +312,6 @@ if __name__ == "__main__" and sys.argv[1:]:
         testfiles += glob.glob(arg)
 else:
     testfiles = glob.glob("cmdln_*.py")
-    if sys.version_info[:2] >= (2,4):
-        testfiles += glob.glob("cmdln24_*.py")
 for fname in testfiles:
     if not fname.endswith('.py'):
         continue
