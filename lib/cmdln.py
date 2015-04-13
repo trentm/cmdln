@@ -60,12 +60,6 @@ LOOP_ALWAYS, LOOP_NEVER, LOOP_IF_EMPTY = range(3)
 # An unspecified optional argument when None is a meaningful value.
 _NOT_SPECIFIED = ("Not", "Specified")
 
-# Pattern to match a TypeError message from a call that
-# failed because of incorrect number of arguments (see
-# Python/getargs.c).
-_INCORRECT_NUM_ARGS_RE = re.compile(
-    r"(takes [\w ]+ )(\d+)( arguments? \()(\d+)( given\))")
-
 
 
 #---- exceptions
@@ -1125,11 +1119,8 @@ class Cmdln(RawCmdln):
             try:
                 return handler(argv[0], opts, *args)
             except TypeError as ex:
-                # Some TypeError's are user errors:
-                #   do_foo() takes at least 4 arguments (3 given)
-                #   do_foo() takes at most 5 arguments (6 given)
-                #   do_foo() takes exactly 5 arguments (6 given)
-                # Raise CmdlnUserError for these with a suitably
+                # Some TypeError's are user errors because of incorrect number
+                # of arguments. Raise CmdlnUserError for these with a suitably
                 # massaged error message.
                 import sys
                 tb = sys.exc_info()[2] # the traceback object
@@ -1140,21 +1131,43 @@ class Cmdln(RawCmdln):
                     # here: it would falsely mask deeper code errors.
                     raise
                 msg = ex.args[0]
-                match = _INCORRECT_NUM_ARGS_RE.search(msg)
-                if match:
-                    msg = list(match.groups())
-                    msg[1] = int(msg[1]) - 3
-                    if msg[1] == 1:
-                        msg[2] = msg[2].replace("arguments", "argument")
-                    msg[3] = int(msg[3]) - 3
-                    msg = ''.join(map(str, msg))
-                    raise CmdlnUserError(msg)
+                userErr = self._userErrFromNumArgsErrmsg(msg)
+                if userErr:
+                    raise userErr
                 else:
                     raise
         else:
             raise CmdlnError("incorrect argcount for %s(): takes %d, must "
                              "take 2 for 'argv' signature or 3+ for 'opts' "
                              "signature" % (handler.__name__, co_argcount))
+
+    def _userErrFromNumArgsErrmsg(self, msg):
+        if sys.version_info[0] < 3:
+            # Examples (see Python/getargs.c):
+            #   do_foo() takes at least 4 arguments (3 given)
+            #   do_foo() takes at most 5 arguments (6 given)
+            #   do_foo() takes exactly 5 arguments (6 given)
+            pattern = re.compile(
+                r"(takes [\w ]+ )(\d+)( arguments? \()(\d+)( given\))")
+            match = pattern.search(msg)
+            if match:
+                msg = list(match.groups())
+                msg[1] = int(msg[1]) - 3
+                if msg[1] == 1:
+                    msg[2] = msg[2].replace("arguments", "argument")
+                msg[3] = int(msg[3]) - 3
+                msg = ''.join(map(str, msg))
+                return CmdlnUserError(msg)
+        else:
+            # Examples:
+            #   do_foo() missing 1 required positional argument: 'bar'
+            patterns = [
+                re.compile(r"missing \d+ required positional argument"),
+            ]
+            for pat in patterns:
+                match = pat.search(msg)
+                if match:
+                    return CmdlnUserError("incorrect number of arguments")
 
 
 
