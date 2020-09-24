@@ -1,3 +1,5 @@
+**This repo and Python module are unmaintained.**
+
 # Why cmdln.py?
 
 `cmdln.py` fixes some of the design flaws in `cmd.py` and uses the 
